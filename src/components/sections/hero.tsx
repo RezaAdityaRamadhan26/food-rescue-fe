@@ -13,26 +13,26 @@ export default function HeroSection() {
           </h1>
 
           {/* container timer */}
-          <div className="-ml-20 mt-25 flex h-27.5 w-270 items-center justify-between rounded-[28px] bg-[#C0B08E] px-12">
+          <div className="-ml-20 mt-30 flex h-23 w-270 items-center justify-between rounded-[28px] bg-[#C0B08E] px-12">
             <p className="text-[20px] font-normal text-[#FFFCFB]">
               Segera diselamatkan, sebelum terbuang!
             </p>
             <div className="flex items-center gap-3">
               <div className="flex flex-col items-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-[8px] border border-[#FFFCFB]/60 text-[24px] font-medium text-[#FFFCFB]">
+                <div className="flex h-12 w-12 items-center justify-center rounded-[8px] border border-[#FFFCFB]/60 text-[18px] font-medium text-[#FFFCFB]">
                   127
                 </div>
                 <span className="mt-1.5 text-[13px] text-[#FFFCFB]">Days</span>
               </div>
               <div className="flex flex-col items-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-[8px] border border-[#FFFCFB]/60 text-[24px] font-medium text-[#FFFCFB]">
+                <div className="flex h-12 w-12 items-center justify-center rounded-[8px] border border-[#FFFCFB]/60 text-[18px] font-medium text-[#FFFCFB]">
                   14
                 </div>
                 <span className="mt-1.5 text-[13px] text-[#FFFCFB]">Hours</span>
               </div>
               <span className="mb-5.5 text-[32px] text-[#FFFCFB]">:</span>
               <div className="flex flex-col items-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-[8px] border border-[#FFFCFB]/60 text-[24px] font-medium text-[#FFFCFB]">
+                <div className="flex h-12 w-12 items-center justify-center rounded-[8px] border border-[#FFFCFB]/60 text-[18px] font-medium text-[#FFFCFB]">
                   33
                 </div>
                 <span className="mt-1.5 text-[13px] text-[#FFFCFB]">
@@ -41,7 +41,7 @@ export default function HeroSection() {
               </div>
               <span className="mb-5.5 text-[32px] text-[#FFFCFB]">:</span>
               <div className="flex flex-col items-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-[8px] border border-[#FFFCFB]/60 text-[24px] font-medium text-[#FFFCFB]">
+                <div className="flex h-12 w-12 items-center justify-center rounded-[8px] border border-[#FFFCFB]/60 text-[18px] font-medium text-[#FFFCFB]">
                   59
                 </div>
                 <span className="mt-1.5 text-[13px] text-[#FFFCFB]">
@@ -51,7 +51,7 @@ export default function HeroSection() {
             </div>
             <Link
               href="#menu"
-              className="flex h-17.5 w-45 items-center justify-center rounded-[24px] bg-[#FFFCFB] text-[20px] font-medium text-[#BBAB8C] transition hover:opacity-90"
+              className="flex h-15 w-45 items-center justify-center rounded-[18px] bg-[#FFFCFB] text-[18px] font-medium text-[#BBAB8C] transition hover:opacity-90"
             >
               Buy Now
             </Link>

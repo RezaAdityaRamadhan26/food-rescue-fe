@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 
 export default function Navbar() {
   const [activeSection, setActiveSection] = useState("home");
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const sections = document.querySelectorAll("section");
@@ -20,7 +21,7 @@ export default function Navbar() {
       },
       {
         threshold: 0.6,
-      }
+      },
     );
 
     sections.forEach((section) => {
@@ -41,10 +42,24 @@ export default function Navbar() {
     { href: "contact", label: "Contact Us" },
   ];
 
-  return (
-    <nav className="w-full bg-[#E3DBD1] px-8 py-6 lg:px-16">
-      <div className="mx-auto flex max-w-7xl items-center justify-between">
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
 
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []); 
+
+  return (
+    <nav className={`fixed top-0 z-50 w-full px-8 py-6 transition-all duration-300 lg:px-16 
+    ${scrolled 
+    ? "border-b border-white/20 bg-[#E3DBD1]/80 backdrop-blur-md" 
+    : "bg-transparent"}`}>
+      <div className="mx-auto flex max-w-7xl items-center justify-between">
         <Link
           href="/"
           className="text-xl font-bold tracking-wide text-[#091413]"
@@ -70,7 +85,6 @@ export default function Navbar() {
           ))}
         </ul>
 
-     
         <div className="flex items-center gap-8 text-[#091413]">
           <button className="transition hover:opacity-70">
             <Bell size={25} strokeWidth={1.8} />

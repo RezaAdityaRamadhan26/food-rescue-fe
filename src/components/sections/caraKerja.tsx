@@ -2,7 +2,7 @@
 
 import { HandPlatter, ShoppingBag, UtensilsCrossed } from "lucide-react";
 
-export default function SecondSection() {
+export default function CaraKerjaSection() {
   const steps = [
     {
       icon: <UtensilsCrossed size={34} strokeWidth={1.8} />,
