@@ -2,8 +2,11 @@
 
 import Image from "next/image";
 import { Clock3 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function MenuSection() {
+  const router = useRouter();
+
   const menus = [
     {
       image: "/images/nasiGoreng.jpg",
@@ -68,65 +71,15 @@ export default function MenuSection() {
         </div>
 
         {/* MENU SCROLL */}
-        <div
-          className="mt-20 overflow-x-auto pb-4"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        {/* button view all buat ke menu page tapi belom diarahin, arahin sebduru */}
+        <button
+          onClick={() => router.push("/menu_page")}
+          className="text-[#AC7F5E] hover:text-[#8B5A2B] ml-300 mt-25"
         >
-          <div className="flex w-max gap-8 [&::-webkit-scrollbar]:hidden">
-            {menus.map((item, index) => (
-              <div
-                key={index}
-                className="group w-90 rounded-[32px] bg-[#FFFAF5] p-5 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_60px_rgba(0,0,0,0.08)]"
-              >
-                {/* IMAGE */}
-                <div className="relative aspect-4/3 overflow-hidden rounded-[15px]">
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    sizes="25vw"
-                    className="object-cover transition duration-500 group-hover:scale-105"
-                  />
-                </div>
-
-                {/* CONTENT */}
-                <div className="mt-6">
-                  {/* STORE */}
-                  <p className="text-sm font-medium tracking-[0.15em] text-[#091413] opacity-65">
-                    {item.store}
-                  </p>
-
-                  {/* TITLE */}
-                  <h3 className="mt-3 text-[25px] font-semibold leading-[1.2] text-[#091413]">
-                    {item.title}
-                  </h3>
-
-                  {/* PRICE */}
-                  <div className="mt-5 flex items-end gap-3">
-                    <span className="text-[25px] font-semibold text-[#AC7F5E]">
-                      {item.price}
-                    </span>
-
-                    <span className="mb-1 text-[16px] text-[#AC7F5E] opacity-55 line-through">
-                      {item.originalPrice}
-                    </span>
-                  </div>
-
-                  {/* TIMER */}
-                  <div className="mt-6 flex items-center gap-2 text-[#091413] opacity-65">
-                    <Clock3 size={18} strokeWidth={1.8} />
-
-                    <span className="text-[12px] font-medium">
-                      Berakhir dalam {item.time}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+          View All
+        </button>
         <div
-          className="mt-20 overflow-x-auto pb-4"
+          className="mt-5 overflow-x-auto pb-4"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           <div className="flex w-max gap-8 [&::-webkit-scrollbar]:hidden">
