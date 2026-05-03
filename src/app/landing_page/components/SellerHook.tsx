@@ -25,7 +25,7 @@ export default function SellerSection() {
   ];
 
   return (
-    <section id="seller" className="bg-[#FFFAF5] px-8 py-32 lg:px-16">
+    <section id="seller" className="bg-[#FFFCFB] px-8 py-32 lg:px-16">
       <div className="mx-auto grid max-w-7xl items-center gap-28 lg:grid-cols-2">
         <div className="flex gap-2">
           <div className="relative h-127 w-105 overflow-hidden rounded-[20px]">

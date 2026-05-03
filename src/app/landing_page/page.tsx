@@ -6,6 +6,7 @@ import MenuSection from "@/app/landing_page/components/menu";
 import SellerHook from "@/app/landing_page/components/SellerHook";
 import CTASection from "@/app/landing_page/components/CTAsection";
 import Footer from "@/components/layout/footer";
+import ImpactSection from "./components/impact";
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
       <CaraKerjaSection />
       <UserBenefitSection />
       <MenuSection />
+      <ImpactSection />
       <SellerHook />
       <CTASection />
       <Footer/>
