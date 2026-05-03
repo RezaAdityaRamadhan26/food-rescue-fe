@@ -1,5 +1,3 @@
-// app/food-details/page.tsx
-
 "use client";
 
 import { useState } from "react";
@@ -145,9 +143,7 @@ export default function FoodDetailsPage() {
               </div>
 
               <div className="rounded-2xl border border-[#B98D67]/20 bg-[#091413]/10 px-5 py-4 text-center">
-                <p className="text-3xl font-bold text-[#B98D67]">
-                  63%
-                </p>
+                <p className="text-3xl font-bold text-[#B98D67]">63%</p>
 
                 <p className="text-xs font-semibold uppercase tracking-widest text-[#B98D67]">
                   Off
@@ -162,9 +158,7 @@ export default function FoodDetailsPage() {
               <div className="mb-3 flex items-center justify-between">
                 <p className="text-sm">
                   Hanya{" "}
-                  <span className="font-semibold text-[#B98D67]">
-                    3 Porsi
-                  </span>{" "}
+                  <span className="font-semibold text-[#B98D67]">3 Porsi</span>{" "}
                   Tersisa
                 </p>
 
@@ -221,9 +215,7 @@ export default function FoodDetailsPage() {
                   −
                 </button>
 
-                <span className="text-xl font-semibold">
-                  {quantity}
-                </span>
+                <span className="text-xl font-semibold">{quantity}</span>
 
                 <button
                   onClick={() => setQuantity((q) => Math.min(3, q + 1))}
@@ -282,9 +274,13 @@ export default function FoodDetailsPage() {
                 <h3 className="mb-5 font-serif text-3xl">Deskripsi</h3>
 
                 <p className="leading-8 opacity-70">
-                  Nasi Goreng Spesial ini merupakan hidangan lezat yang dibuat dengan bahan-bahan berkualitas tinggi dan resep tradisional yang sudah teruji. 
-                  Dengan cita rasa yang kaya dan aroma yang menggugah selera, nasi goreng ini siap memanjakan lidahmu sambil membantu mengurangi limbah makanan. 
-                  Jangan lewatkan kesempatan untuk menikmati hidangan spesial ini dengan harga yang lebih hemat!
+                  Nasi Goreng Spesial ini merupakan hidangan lezat yang dibuat
+                  dengan bahan-bahan berkualitas tinggi dan resep tradisional
+                  yang sudah teruji. Dengan cita rasa yang kaya dan aroma yang
+                  menggugah selera, nasi goreng ini siap memanjakan lidahmu
+                  sambil membantu mengurangi limbah makanan. Jangan lewatkan
+                  kesempatan untuk menikmati hidangan spesial ini dengan harga
+                  yang lebih hemat!
                 </p>
               </div>
             )}
@@ -326,20 +322,17 @@ export default function FoodDetailsPage() {
                 <h3 className="mb-6 font-serif text-3xl">Bahan-Bahan</h3>
 
                 <div className="grid gap-4 sm:grid-cols-2">
-                  {[
-                    "Nasi",
-                    "Telur Ceplok",
-                    "Sayuran",
-                    "Daging Ayam",
-                  ].map((item) => (
-                    <div key={item} className="flex items-center gap-3">
-                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#BBAB8C]/20">
-                        <Check size={10} className="text-[#BBAB8C]" />
-                      </div>
+                  {["Nasi", "Telur Ceplok", "Sayuran", "Daging Ayam"].map(
+                    (item) => (
+                      <div key={item} className="flex items-center gap-3">
+                        <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#BBAB8C]/20">
+                          <Check size={10} className="text-[#BBAB8C]" />
+                        </div>
 
-                      <span className="opacity-70">{item}</span>
-                    </div>
-                  ))}
+                        <span className="opacity-70">{item}</span>
+                      </div>
+                    ),
+                  )}
                 </div>
               </div>
             )}
