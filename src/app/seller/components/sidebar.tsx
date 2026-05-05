@@ -17,7 +17,6 @@ import {
 
 import {
   LayoutDashboard,
-  Package,
   ShoppingBag,
   ChartColumn,
   Store,
@@ -25,6 +24,7 @@ import {
   LogOut,
   Leaf,
   ChevronRight,
+  Hamburger,
 } from "lucide-react";
 
 const menuItems = [
@@ -39,9 +39,9 @@ const menuItems = [
     icon: ShoppingBag,
   },
   {
-    label: "Products",
-    href: "/seller/products",
-    icon: Package,
+    label: "Foods",
+    href: "/seller/food",
+    icon: Hamburger,
   },
   {
     label: "Analytics",
