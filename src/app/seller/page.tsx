@@ -1,18 +1,6 @@
 "use client";
 
-import {
-  Area,
-  AreaChart,
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-} from "recharts";
-
+import { useEffect, useState } from "react";
 import {
   Bell,
   ChevronRight,
@@ -24,115 +12,180 @@ import {
   Store,
   TrendingUp,
   Users,
+  Plus,
+  CheckCircle,
+  XCircle,
+  Rocket,
+  UtensilsCrossed,
 } from "lucide-react";
-
-import { motion } from "framer-motion";
 import Image from "next/image";
+import axiosInstance from "@/lib/axios";
+import { useAuthStore } from "@/store/AuthStore";
+import { useRouter } from "next/navigation";
 
-const weeklyData = [
-  { day: "Mon", rescue: 12 },
-  { day: "Tue", rescue: 19 },
-  { day: "Wed", rescue: 15 },
-  { day: "Thu", rescue: 28 },
-  { day: "Fri", rescue: 24 },
-  { day: "Sat", rescue: 32 },
-  { day: "Sun", rescue: 21 },
-];
+interface OwnedProduct {
+  id: string;
+  name: string;
+  sellingPrice: number;
+  originalPrice: number;
+  stock: number;
+  imageUrl: string | null;
+  type: string;
+  category: { categoryName: string } | null;
+}
 
-const impactData = [
-  { name: "Completed", value: 68 },
-  { name: "Pending", value: 20 },
-  { name: "Cancelled", value: 12 },
-];
+interface MerchantOrder {
+  id: string;
+  quantity: number;
+  itemPrice: number;
+  totalPaidByBuyer: number;
+  netSellerRevenue: number;
+  status: string;
+  createdAt: string;
+  deliveryType: string;
+  user: { fullname: string } | null;
+  product: { name: string; type: string } | null;
+}
 
-const recentOrders = [
-  {
-    id: 1,
-    customer: "Sari Dewi",
-    product: "Nasi Box Ayam",
-    status: "Completed",
-    time: "12 mins ago",
-  },
-  {
-    id: 2,
-    customer: "Rian Saputra",
-    product: "Roti Bakery",
-    status: "Pending",
-    time: "28 mins ago",
-  },
-  {
-    id: 3,
-    customer: "Amanda Putri",
-    product: "Sayur Segar",
-    status: "Processing",
-    time: "1 hour ago",
-  },
-];
+const statusColors: Record<string, string> = {
+  WAITING_PAYMENT: "bg-yellow-100 text-yellow-700",
+  PREPARING: "bg-blue-100 text-blue-700",
+  READY_FOR_PICKUP: "bg-green-100 text-green-700",
+  ON_THE_WAY: "bg-purple-100 text-purple-700",
+  COMPLETED: "bg-emerald-100 text-emerald-700",
+  CANCELLED: "bg-red-100 text-red-700",
+};
 
-const stats = [
-  {
-    title: "Total Rescue",
-    value: "1,284",
-    growth: "+12%",
-    icon: ShoppingBag,
-  },
-  {
-    title: "Food Saved",
-    value: "842 kg",
-    growth: "+18%",
-    icon: Package,
-  },
-  {
-    title: "CO₂ Reduced",
-    value: "2.1 ton",
-    growth: "+9%",
-    icon: Leaf,
-  },
-  {
-    title: "Customers",
-    value: "542",
-    growth: "+21%",
-    icon: Users,
-  },
-];
+const statusLabels: Record<string, string> = {
+  WAITING_PAYMENT: "Menunggu",
+  PREPARING: "Diproses",
+  READY_FOR_PICKUP: "Siap Ambil",
+  ON_THE_WAY: "Diantar",
+  COMPLETED: "Selesai",
+  CANCELLED: "Batal",
+};
+
+const nextStatus: Record<string, string> = {
+  WAITING_PAYMENT: "PREPARING",
+  PREPARING: "READY_FOR_PICKUP",
+  READY_FOR_PICKUP: "ON_THE_WAY",
+  ON_THE_WAY: "COMPLETED",
+};
 
 export default function SellerDashboardPage() {
+  const { user, token, fetchProfile } = useAuthStore();
+  const router = useRouter();
+
+  const [products, setProducts] = useState<OwnedProduct[]>([]);
+  const [orders, setOrders] = useState<MerchantOrder[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (token && !user) {
+      fetchProfile();
+    }
+  }, [token, user, fetchProfile]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [prodRes, orderRes] = await Promise.all([
+          axiosInstance.get("/products/owned"),
+          axiosInstance.get("/orders"),
+        ]);
+        setProducts(prodRes.data.data || []);
+        setOrders(orderRes.data.data || []);
+      } catch {
+        // silently fail
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+  }, []);
+
+  const handleUpdateStatus = async (orderId: string, newStatus: string) => {
+    try {
+      await axiosInstance.put(`/orders/${orderId}/status`, { status: newStatus });
+      setOrders((prev) =>
+        prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o))
+      );
+    } catch (err: any) {
+      alert(err.response?.data?.message || "Gagal update status");
+    }
+  };
+
+  const handleCancelOrder = async (orderId: string) => {
+    await handleUpdateStatus(orderId, "CANCELLED");
+  };
+
+  const formatPrice = (price: number) =>
+    `Rp${price.toLocaleString("id-ID")}`;
+
+  const completedOrders = orders.filter((o) => o.status === "COMPLETED").length;
+  const totalRevenue = orders
+    .filter((o) => o.status === "COMPLETED")
+    .reduce((sum, o) => sum + o.netSellerRevenue, 0);
+
+  const stats = [
+    {
+      title: "Total Produk",
+      value: String(products.length),
+      icon: ShoppingBag,
+    },
+    {
+      title: "Pesanan Masuk",
+      value: String(orders.length),
+      icon: Package,
+    },
+    {
+      title: "Selesai",
+      value: String(completedOrders),
+      icon: Leaf,
+    },
+    {
+      title: "Pendapatan",
+      value: formatPrice(totalRevenue),
+      icon: Users,
+    },
+  ];
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#FFFCFB]">
+        <div className="h-12 w-12 animate-spin rounded-full border-3 border-[#AC7F5E]/20 border-t-[#AC7F5E]" />
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-screen bg-[#FFFCFB]">
-      <main className="min-h-screen flex-1 ">
-        <div>
+      <main className="min-h-screen flex-1">
+        <div className="p-6 lg:p-10">
+          {/* Header */}
           <div className="mb-5 flex flex-col gap-4 rounded-[24px] border border-[#EEE7DE] bg-[#FFFCFB] p-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex h-12 w-full items-center gap-3 rounded-2xl border border-[#EFE7DD] bg-[#FFFCFB] px-4 lg:max-w-md">
               <Search size={18} className="text-[#091413]/55" />
-
               <input
                 type="text"
-                placeholder="Search orders, customer..."
+                placeholder="Search orders, products..."
                 className="w-full bg-transparent text-sm outline-none placeholder:text-[#091413]/55"
               />
             </div>
 
-            {/* PROFILE */}
             <div className="flex items-center gap-3">
               <button className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[#EFE7DD] bg-[#FAF8F5] transition hover:scale-105">
                 <Bell size={18} className="text-[#AC7F5E]" />
               </button>
 
               <div className="flex items-center gap-3 rounded-2xl border border-[#EFE7DD] bg-[#FAF8F5] px-3 py-2">
-                <Image
-                  src="/images/avatar.png"
-                  alt="Profile"
-                  width={48}
-                  height={48}
-                  className="overflow-hidden rounded-full h-12 w-12 object-cover"
-                />
-
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#AC7F5E] text-sm font-bold text-white">
+                  {user?.fullname?.charAt(0)?.toUpperCase() || "M"}
+                </div>
                 <div>
                   <h3 className="text-sm font-semibold text-[#091413]">
-                    Warung Bu Devi
+                    {user?.fullname || "Merchant"}
                   </h3>
-
-                  <p className="text-xs text-[#091413]/65">devi@foodrescue.id</p>
+                  <p className="text-xs text-[#091413]/65">{user?.email}</p>
                 </div>
               </div>
             </div>
@@ -141,20 +194,9 @@ export default function SellerDashboardPage() {
           <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <h1 className="font-serif text-5xl text-[#091413]">Dashboard</h1>
-
               <p className="mt-2 text-sm text-[#091413]/65">
                 Monitor rescue makanan dan performa UMKM kamu.
               </p>
-            </div>
-
-            <div className="flex gap-3">
-              <button className="rounded-2xl bg-[#AC7F5E] px-5 py-3 text-sm font-semibold text-[#FFFCFB] transition hover:scale-[1.02]">
-                + Tambah Produk
-              </button>
-
-              <button className="rounded-2xl border border-[#AC7F5E] px-5 py-3 text-sm font-semibold text-[#AC7F5E] transition hover:bg-[#AC7F5E] hover:text-[#FFFCFB]">
-                Export Data
-              </button>
             </div>
           </div>
 
@@ -164,14 +206,11 @@ export default function SellerDashboardPage() {
               const Icon = item.icon;
 
               return (
-                <motion.div
+                <div
                   key={item.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
                   className={`rounded-[28px] border p-5 ${
                     index === 0
-                      ? "border-[#28553D] bg-linear-to-br from-[#AC7F5E] to-[#BBAB8C] text-[#FFFCFB]"
+                      ? "border-[#28553D] bg-gradient-to-br from-[#AC7F5E] to-[#BBAB8C] text-[#FFFCFB]"
                       : "border-[#EEE7DE] bg-[#FFFCFB]"
                   }`}
                 >
@@ -184,8 +223,7 @@ export default function SellerDashboardPage() {
                       >
                         {item.title}
                       </p>
-
-                      <h2 className="mt-3 text-5xl font-bold">{item.value}</h2>
+                      <h2 className="mt-3 text-3xl font-bold">{item.value}</h2>
                     </div>
 
                     <div
@@ -198,233 +236,154 @@ export default function SellerDashboardPage() {
                       <Icon size={20} />
                     </div>
                   </div>
-
-                  <div className="flex items-center gap-2 text-sm">
-                    <TrendingUp size={15} />
-
-                    <span>{item.growth} bulan ini</span>
-                  </div>
-                </motion.div>
+                </div>
               );
             })}
           </div>
 
           {/* GRID */}
           <div className="grid grid-cols-1 gap-5 xl:grid-cols-12">
-            {/* CHART */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="rounded-[28px] border border-[#EEE7DE] bg-[#FFFCFB] p-5 xl:col-span-7"
-            >
+            {/* ORDERS */}
+            <div className="rounded-[28px] border border-[#EEE7DE] bg-[#FFFCFB] p-5 xl:col-span-8">
               <div className="mb-5 flex items-center justify-between">
                 <div>
                   <h2 className="text-xl font-semibold text-[#091413]">
-                    Weekly Rescue Activity
+                    Pesanan Masuk
                   </h2>
-
-                  <p className="text-sm text-[#9E8A78]">
-                    Aktivitas rescue makanan minggu ini
+                  <p className="text-sm text-[#091413]/65">
+                    Kelola pesanan rescue terbaru
                   </p>
                 </div>
-
-                <button className="rounded-xl bg-[#BBAB8C] px-3 py-2 text-sm text-[#FFFCFB]">
-                  Weekly
-                </button>
               </div>
 
-              <div className="h-80">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={weeklyData}>
-                    <defs>
-                      <linearGradient
-                        id="colorRescue"
-                        x1="0"
-                        y1="0"
-                        x2="0"
-                        y2="1"
-                      >
-                        <stop
-                          offset="5%"
-                          stopColor="#AC7F5E"
-                          stopOpacity={0.8}
-                        />
-                        <stop
-                          offset="95%"
-                          stopColor="#BBAB8C"
-                          stopOpacity={0}
-                        />
-                      </linearGradient>
-                    </defs>
+              {orders.length === 0 ? (
+                <p className="py-10 text-center text-[#091413]/50">
+                  Belum ada pesanan masuk
+                </p>
+              ) : (
+                <div className="space-y-4">
+                  {orders.map((order) => (
+                    <div
+                      key={order.id}
+                      className="flex items-center justify-between rounded-2xl border border-[#F1EBE3] bg-[#FFFCFB] p-4"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#FFFCFB]">
+                          <ShoppingBag size={18} className="text-[#AC7F5E]" />
+                        </div>
 
-                    <CartesianGrid strokeDasharray="3 3" stroke="#EFE7DD" />
+                        <div>
+                          <h3 className="font-semibold text-[#091413]">
+                            {order.user?.fullname || "Customer"}
+                          </h3>
+                          <p className="text-sm text-[#091413]/65">
+                            {order.product?.name} × {order.quantity}
+                          </p>
+                        </div>
+                      </div>
 
-                    <XAxis
-                      dataKey="day"
-                      tick={{ fill: "#AC7F5E", fontSize: 12 }}
-                      axisLine={false}
-                      tickLine={false}
-                    />
+                      <div className="flex items-center gap-3">
+                        <div className="text-right">
+                          <p className="text-sm font-semibold text-[#091413]">
+                            {formatPrice(order.totalPaidByBuyer)}
+                          </p>
 
-                    <Tooltip />
+                          <div
+                            className={`mt-1 inline-block rounded-full px-3 py-1 text-xs font-semibold ${
+                              statusColors[order.status] || "bg-gray-100 text-gray-600"
+                            }`}
+                          >
+                            {statusLabels[order.status] || order.status}
+                          </div>
+                        </div>
 
-                    <Area
-                      type="monotone"
-                      dataKey="rescue"
-                      stroke="#AC7F5E"
-                      strokeWidth={3}
-                      fillOpacity={1}
-                      fill="url(#colorRescue)"
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
-            </motion.div>
+                        {/* Actions */}
+                        {nextStatus[order.status] && (
+                          <button
+                            onClick={() =>
+                              handleUpdateStatus(order.id, nextStatus[order.status])
+                            }
+                            className="flex h-9 w-9 items-center justify-center rounded-xl bg-green-100 text-green-700 transition hover:bg-green-200"
+                            title="Lanjutkan status"
+                          >
+                            <CheckCircle size={16} />
+                          </button>
+                        )}
 
-            {/* IMPACT */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="rounded-[28px] border border-[#EEE7DE] bg-[#FFFCFB] p-5 xl:col-span-5"
-            >
+                        {order.status !== "COMPLETED" &&
+                          order.status !== "CANCELLED" && (
+                            <button
+                              onClick={() => handleCancelOrder(order.id)}
+                              className="flex h-9 w-9 items-center justify-center rounded-xl bg-red-100 text-red-600 transition hover:bg-red-200"
+                              title="Batalkan"
+                            >
+                              <XCircle size={16} />
+                            </button>
+                          )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* MY PRODUCTS */}
+            <div className="rounded-[28px] border border-[#EEE7DE] bg-[#FFFCFB] p-5 xl:col-span-4">
               <div className="mb-5">
                 <h2 className="text-xl font-semibold text-[#091413]">
-                  Rescue Impact
+                  Produk Saya
                 </h2>
-
-                <p className="text-sm text-[#9E8A78]">
-                  Distribusi status rescue
+                <p className="text-sm text-[#091413]/65">
+                  {products.length} produk terdaftar
                 </p>
               </div>
 
-              <div className="h-70">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={impactData}
-                      dataKey="value"
-                      innerRadius={70}
-                      outerRadius={110}
-                      paddingAngle={4}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-
-              <div className="mt-5 flex justify-center gap-5">
-                {impactData.map((item) => (
-                  <div key={item.name} className="text-center">
-                    <h3 className="text-lg font-bold text-[#091413]">
-                      {item.value}%
-                    </h3>
-
-                    <p className="text-xs text-[#091413]/65">{item.name}</p>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* ORDERS */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="rounded-[28px] border border-[#EEE7DE] bg-[#FFFCFB] p-5 xl:col-span-8"
-            >
-              <div className="mb-5 flex items-center justify-between">
-                <div>
-                  <h2 className="text-xl font-semibold text-[#091413]">
-                    Recent Orders
-                  </h2>
-
-                  <p className="text-sm text-[#091413]/65">
-                    Pesanan rescue terbaru
-                  </p>
-                </div>
-
-                <button className="flex items-center gap-1 text-sm font-medium text-[#BBAB8C]">
-                  View all
-                  <ChevronRight size={16} />
-                </button>
-              </div>
-
-              <div className="space-y-4">
-                {recentOrders.map((order) => (
-                  <div
-                    key={order.id}
-                    className="flex items-center justify-between rounded-2xl border border-[#F1EBE3] bg-[#FFFCFB] p-4"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#FFFCFB]">
-                        <ShoppingBag size={18} className="text-[#AC7F5E]" />
+              {products.length === 0 ? (
+                <p className="py-10 text-center text-[#091413]/50">
+                  Belum ada produk
+                </p>
+              ) : (
+                <div className="space-y-3">
+                  {products.map((product) => (
+                    <div
+                      key={product.id}
+                      className="flex items-center gap-3 rounded-2xl border border-[#F1EBE3] bg-[#FFFAF5] p-3"
+                    >
+                      <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-[#F0E8DC]">
+                        {product.imageUrl ? (
+                          <Image
+                            src={product.imageUrl}
+                            alt={product.name}
+                            fill
+                            className="object-cover"
+                          />
+                        ) : (
+                          <UtensilsCrossed size={20} className="text-[#AC7F5E]/60" />
+                        )}
                       </div>
 
-                      <div>
-                        <h3 className="font-semibold text-[#091413]">
-                          {order.customer}
-                        </h3>
-
-                        <p className="text-sm text-[#091413]/65">
-                          {order.product}
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-semibold text-[#091413]">
+                          {product.name}
+                        </p>
+                        <p className="text-xs text-[#091413]/50">
+                          {formatPrice(product.sellingPrice)} · Stok {product.stock}
                         </p>
                       </div>
+
+                      {product.stock <= 3 && (
+                        <span className="shrink-0 rounded-full bg-red-100 px-2 py-0.5 text-[0.6rem] font-semibold text-red-600">
+                          Low
+                        </span>
+                      )}
                     </div>
+                  ))}
+                </div>
+              )}
+            </div>
 
-                    <div className="text-center">
-                      <div className="rounded-full bg-[#BBAB8C] px-3 py-1 text-xs font-semibold text-[#FFFCFB]">
-                        {order.status}
-                      </div>
-
-                      <div className="mt-2 flex items-center justify-end gap-1 text-xs text-[#091413]/65">
-                        <Clock3 size={12} />
-                        {order.time}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* MINI CHART */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="rounded-[28px] border border-[#EEE7DE] bg-[#FFFCFB] p-5 xl:col-span-4"
-            >
-              <div className="mb-5">
-                <h2 className="text-xl font-semibold text-[#091413]">
-                  Product Analytics
-                </h2>
-
-                <p className="text-sm text-[#091413]/65">
-                  Produk paling banyak diselamatkan
-                </p>
-              </div>
-
-              <div className="h-65">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={weeklyData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#EFE7DD" />
-
-                    <XAxis dataKey="day" axisLine={false} tickLine={false} />
-
-                    <Tooltip />
-
-                    <Bar
-                      dataKey="rescue"
-                      radius={[20, 20, 0, 0]}
-                      fill="#AC7F5E"
-                    />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </motion.div>
-
-            {/* STORE */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="relative overflow-hidden rounded-[28px] bg-linear-to-br from-[#AC7F5E] to-[#BBAB8C] p-6 text-[#FFFCFB] xl:col-span-12"
-            >
+            {/* CTA */}
+            <div className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#AC7F5E] to-[#BBAB8C] p-6 text-[#FFFCFB] xl:col-span-12">
               <div className="absolute -right-10 -top-10 h-60 w-60 rounded-full bg-[#FFFCFB]/5" />
 
               <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
@@ -434,7 +393,7 @@ export default function SellerDashboardPage() {
                   </div>
 
                   <h2 className="text-3xl font-bold">
-                    Tingkatkan Rescue UMKM Kamu 🚀
+                    Tingkatkan Rescue UMKM Kamu <Rocket size={24} className="inline" />
                   </h2>
 
                   <p className="mt-2 max-w-2xl text-sm text-[#FFFCFB]/75">
@@ -442,12 +401,8 @@ export default function SellerDashboardPage() {
                     lebih banyak makanan terselamatkan hari ini.
                   </p>
                 </div>
-
-                <button className="h-fit rounded-2xl bg-[#FFFCFB] px-6 py-4 font-semibold text-[#AC7F5E] transition hover:scale-[1.03]">
-                  Manage Store
-                </button>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </main>

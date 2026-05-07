@@ -7,7 +7,7 @@ import SellerHook from "@/app/(home)/components/SellerHook";
 import CTASection from "@/app/(home)/components/CTAsection";
 import Footer from "@/components/layout/footer";
 import ImpactSection from "./components/impact";
-
+``
 export default function Home() {
   return (
     <div>

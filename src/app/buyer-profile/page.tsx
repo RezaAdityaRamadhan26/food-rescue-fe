@@ -197,7 +197,7 @@ export default function Profile() {
           Bersama Kita Menyelamatkan{" "}
           <strong className="text-[#5B8A6B]">12,847 makanan</strong> dan
           mencegah <strong className="text-[#5B8A6B]">3.2 ton</strong> limbah
-          makanan di Indonesia 🌱
+          makanan di Indonesia <Leaf size={12} className="inline text-[#5B8A6B]" />
         </span>
       </div>
       <Footer></Footer>

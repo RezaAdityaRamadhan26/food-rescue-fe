@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/AuthStore";
 
 import {
   Sidebar,
@@ -62,6 +63,13 @@ const menuItems = [
 
 export default function AppSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { logout } = useAuthStore();
+
+  const handleLogout = async () => {
+    await logout();
+    router.push("/");
+  };
 
   return (
     <Sidebar className="border-r border-[#EADFD3] bg-[#FFFCFB]">
@@ -143,7 +151,7 @@ export default function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="border-t border-[#F1E7DD] p-3">
-        <button className="flex h-13 w-full items-center gap-3 rounded-2xl px-3 text-[#c23737] transition-all duration-200 hover:bg-[#F8F2EC]">
+        <button onClick={handleLogout} className="flex h-13 w-full items-center gap-3 rounded-2xl px-3 text-[#c23737] transition-all duration-200 hover:bg-[#F8F2EC]">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#F5EDE4]">
             <LogOut size={18} />
           </div>

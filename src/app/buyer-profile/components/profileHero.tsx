@@ -1,11 +1,30 @@
+"use client";
+
 import Image from "next/image";
 import { MapPin, Star, Leaf, Edit3, Bell } from "lucide-react";
+import { useAuthStore } from "@/store/AuthStore";
+import { useEffect } from "react";
 
 export function ProfileHero() {
-  const hour = new Date().getHours();
+  const { user, token, fetchProfile } = useAuthStore();
 
+  useEffect(() => {
+    if (token && !user) {
+      fetchProfile();
+    }
+  }, [token, user, fetchProfile]);
+
+  const hour = new Date().getHours();
   const greeting =
     hour < 12 ? "Selamat pagi" : hour < 17 ? "Selamat siang" : "Selamat malam";
+
+  const displayName = user?.fullname || "Pengguna";
+  const initials = displayName
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 
   return (
     <div className="relative overflow-hidden rounded-3xl bg-[linear-gradient(135deg,#3D2C1E_0%,#5C3D22_50%,#4A3728_100%)] p-6 shadow-[0_8px_40px_rgba(45,31,20,0.25)] md:p-8">
@@ -17,13 +36,10 @@ export function ProfileHero() {
       <div className="relative z-10 flex flex-col items-start gap-5 sm:flex-row sm:items-center">
         {/* AVATAR */}
         <div className="relative shrink-0">
-          <div className="relative h-20 w-20 overflow-hidden rounded-2xl border-[3px] border-[#C4A88280] shadow-[0_8px_24px_rgba(0,0,0,0.3)] md:h-24 md:w-24">
-            <Image
-              src="/images/avatar.png"
-              alt="Eki Eko"
-              fill
-              className="object-cover"
-            />
+          <div className="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl border-[3px] border-[#C4A88280] bg-[#AC7F5E] shadow-[0_8px_24px_rgba(0,0,0,0.3)] md:h-24 md:w-24">
+            <span className="text-2xl font-bold text-white md:text-3xl">
+              {initials}
+            </span>
           </div>
 
           {/* ONLINE BADGE */}
@@ -35,11 +51,11 @@ export function ProfileHero() {
         {/* INFO */}
         <div className="flex-1">
           <div className="mb-0.5 text-[0.8rem] tracking-wider text-[#C4A882]">
-            {greeting}, 👋
+            {greeting}, <span className="inline-block animate-bounce">✋</span>
           </div>
 
           <h1 className="mb-1.5 font-serif text-[1.75rem] leading-[1.2] text-[#FFFCFB]">
-            Eki Eko
+            {displayName}
           </h1>
 
           <div className="flex flex-wrap items-center gap-3">
@@ -48,16 +64,16 @@ export function ProfileHero() {
               <Leaf size={11} className="text-[#7BBF9C]" />
 
               <span className="text-[0.72rem] font-semibold text-[#7BBF9C]">
-                Penjaga Lingkungan
+                {user?.role === "MERCHANT" ? "Merchant" : "Penjaga Lingkungan"}
               </span>
             </div>
 
-            {/* LOCATION */}
+            {/* EMAIL */}
             <div className="flex items-center gap-1.5">
               <MapPin size={12} className="text-[#9E8A78]" />
 
               <span className="text-[0.75rem] text-[#9E8A78]">
-                Jakarta, Indonesia
+                {user?.email || "—"}
               </span>
             </div>
 
@@ -107,7 +123,7 @@ export function ProfileHero() {
         </div>
 
         <div className="mt-1 text-[0.7rem] text-[#8E7665]">
-          660 XP lagi untuk mencapai Level 13 — Yuk terus selamatkan makanan! 🌱
+          660 XP lagi untuk mencapai Level 13 — Yuk terus selamatkan makanan! <Leaf size={12} className="inline text-[#7BBF9C]" />
         </div>
       </div>
     </div>
