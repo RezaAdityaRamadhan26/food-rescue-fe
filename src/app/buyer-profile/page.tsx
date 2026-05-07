@@ -10,7 +10,7 @@ import { FavoriteUMKM } from "./components/favoriteUMKM";
 import { Achievements } from "./components/achivement";
 import { QuickActions } from "./components/quickAction";
 import { WeeklyChart } from "./components/weeklyChart";
-import Navbar from "../buyer_profile/components/navbarProfile";
+import Navbar from "../buyer-profile/components/navbarProfile";
 import Footer from "@/components/layout/footer";
 
 const OrganicPattern = () => (
@@ -197,7 +197,7 @@ export default function Profile() {
           Bersama Kita Menyelamatkan{" "}
           <strong className="text-[#5B8A6B]">12,847 makanan</strong> dan
           mencegah <strong className="text-[#5B8A6B]">3.2 ton</strong> limbah
-          makanan di Indonesia 🌱
+          makanan di Indonesia <Leaf size={12} className="inline text-[#5B8A6B]" />
         </span>
       </div>
       <Footer></Footer>
