@@ -195,30 +195,6 @@ export default function CheckoutPage() {
         <div className="space-y-5">
           <div>
             <label className="mb-2 block text-sm font-medium text-[#091413]">
-              Full Name
-            </label>
-
-            <input
-              type="text"
-              placeholder="Enter your name"
-              className="w-full rounded-2xl border border-[#E7DAC8] bg-[#FFFCFB] px-5 py-4 outline-none transition focus:border-[#B88B67]"
-            />
-          </div>
-
-          <div>
-            <label className="mb-2 block text-sm font-medium text-[#091413]">
-              Email Address
-            </label>
-
-            <input
-              type="email"
-              placeholder="you@example.com"
-              className="w-full rounded-2xl border border-[#E7DAC8] bg-[#FFFCFB] px-5 py-4 outline-none transition focus:border-[#B88B67]"
-            />
-          </div>
-
-          <div>
-            <label className="mb-2 block text-sm font-medium text-[#091413]">
               Delivery Address
             </label>
 
