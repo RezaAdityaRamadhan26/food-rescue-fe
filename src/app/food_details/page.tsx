@@ -17,6 +17,8 @@ import Navbar from "@/components/layout/navbar";
 import { CountdownTimer } from "./components/countdownTimer";
 import { ImageGallery } from "./components/imageGaller";
 import { RelatedMeals } from "./components/relatedMeals";
+import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 
 const galleryImages = [
   {
@@ -56,6 +58,13 @@ export default function FoodDetailsPage() {
   const [saved, setSaved] = useState(false);
   const [activeTab, setActiveTab] = useState<InfoTab>("description");
 
+  const handleBuy = () => {
+    setSaved(true);
+
+    setTimeout(() => {
+      setSaved(false);
+    }, 2500);
+  };
   const handleSave = () => {
     setSaved(true);
 
@@ -195,8 +204,18 @@ export default function FoodDetailsPage() {
               </div>
             </div>
 
+            <Field>
+              <FieldLabel className="input-field-catatan font-serif text-sm">Catatan</FieldLabel>
+              <Input
+                id="input-field-catatan "
+                type="text"
+                placeholder="Tambah porsinya ya 🤗"
+                className="h-13 rounded-3xl border border-[#091413]/10 bg-[#FFFCFB] px-5 py-4"
+              />
+            </Field>
+
             {/* Sustainability */}
-            <div className="flex items-center gap-3 rounded-3xl border border-[#091413]/10 bg-[#091413]/1 px-5 py-4">
+            <div className="flex items-center gap-3 rounded-3xl border border-[#091413]/10 bg-[#FFFCFB] px-5 py-4">
               <Leaf size={16} className="text-green-700" />
 
               <p className="text-sm opacity-70">
@@ -227,6 +246,22 @@ export default function FoodDetailsPage() {
 
               {/* Save CTA */}
               <button
+                onClick={handleBuy}
+                className={`flex flex-1 items-center justify-center gap-2 rounded-3xl py-4 text-sm font-medium text-[#FFFCFB] transition-all active:scale-[0.98] ${
+                  saved ? "bg-green-700" : "bg-[#BBAB8C]"
+                }`}
+              >
+                {saved ? (
+                  <>
+                    <Check size={16} />
+                    Pembelian Berhasil!
+                  </>
+                ) : (
+                  <>Buy Now</>
+                )}
+              </button>
+
+              <button
                 onClick={handleSave}
                 className={`flex flex-1 items-center justify-center gap-2 rounded-3xl py-4 text-sm font-medium text-[#FFFCFB] transition-all active:scale-[0.98] ${
                   saved ? "bg-green-700" : "bg-[#BBAB8C]"
@@ -235,13 +270,10 @@ export default function FoodDetailsPage() {
                 {saved ? (
                   <>
                     <Check size={16} />
-                    Meal Saved!
+                    Orderan Tersimpan!
                   </>
                 ) : (
-                  <>
-                    <Heart size={16} />
-                    Save This Meal
-                  </>
+                  <>Save To Orders</>
                 )}
               </button>
             </div>

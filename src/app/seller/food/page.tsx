@@ -59,7 +59,6 @@ const foods = [
     total: 20,
     closing: "1h 20m",
     status: "Available",
-    co2: "2.4kg",
   },
   {
     id: 2,
@@ -73,7 +72,6 @@ const foods = [
     total: 20,
     closing: "45m",
     status: "Low Stock",
-    co2: "1.2kg",
   },
   {
     id: 3,
@@ -87,7 +85,6 @@ const foods = [
     total: 20,
     closing: "Closed",
     status: "Sold Out",
-    co2: "3.1kg",
   },
 ];
 
@@ -108,8 +105,7 @@ export default function FoodManagementPage() {
 
         <div className="flex gap-3">
           <button className="flex items-center gap-2 rounded-2xl bg-[#AC7F5E] px-5 py-3 text-sm font-semibold text-[#FFFCFB] transition hover:scale-[1.02]">
-            <Plus size={18} />
-            Add Food
+            <Plus size={18} />- Add Food
           </button>
 
           <button className="rounded-2xl border border-[#AC7F5E] px-5 py-3 text-sm font-semibold text-[#AC7F5E] transition hover:bg-[#AC7F5E] hover:text-[#FFFCFB]">
@@ -168,7 +164,6 @@ export default function FoodManagementPage() {
       {/* FILTER */}
       <div className="mb-6 rounded-[28px] border border-[#EEE2D4] bg-[#FDFAF6] p-4 shadow-[0_4px_20px_rgba(45,31,20,0.04)]">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-          {/* SEARCH */}
           <div className="flex h-12 w-full items-center gap-3 rounded-2xl border border-[#EFE7DD] bg-white px-4 xl:max-w-md">
             <Search size={18} className="text-[#A18B76]" />
 
@@ -179,7 +174,6 @@ export default function FoodManagementPage() {
             />
           </div>
 
-          {/* FILTER BUTTON */}
           <div className="flex flex-wrap gap-3">
             <button className="rounded-2xl bg-[#AC7F5E] px-4 py-2 text-sm font-semibold text-white">
               All
@@ -224,7 +218,6 @@ export default function FoodManagementPage() {
 
                 <div className="absolute inset-0 bg-linear-to-t from-[#091413]/70 via-transparent to-transparent" />
 
-                {/* STATUS */}
                 <div className="absolute left-4 top-4">
                   <div
                     className={`rounded-full px-3 py-1 text-xs font-semibold ${
@@ -239,12 +232,10 @@ export default function FoodManagementPage() {
                   </div>
                 </div>
 
-                {/* ACTION */}
                 <button className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-2xl bg-white/90 text-[#091413] backdrop-blur-md">
                   <MoreHorizontal size={18} />
                 </button>
 
-                {/* COUNTDOWN */}
                 <div className="absolute bottom-4 left-4 flex items-center gap-2 rounded-full bg-black/30 px-3 py-1 backdrop-blur-md">
                   <Clock3 size={14} className="text-white" />
 
@@ -268,47 +259,35 @@ export default function FoodManagementPage() {
                     </p>
                   </div>
 
-                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#F5EFE6] text-[#AC7F5E]">
-                    <Package2 size={18} />
+                  <div className="flex flex-col items-end gap-2">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#F5EFE6] text-[#AC7F5E]">
+                      <Package2 size={18} />
+                    </div>
+
+                    <div className="text-right">
+                      <p className="text-xs text-[#9E8A78]">Stock Left</p>
+                      <h3 className="text-lg font-bold text-[#091413]">
+                        {food.stock}
+                      </h3>
+                    </div>
                   </div>
                 </div>
 
                 {/* PRICE */}
-                <div className="mb-5 flex items-end gap-3">
-                  <div>
-                    <p className="text-xs text-[#9E8A78]">Original</p>
+                <div className="mb-5 rounded-2xl bg-[#F8F4EF] p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-[#9E8A78]">Original Price</p>
+                      <span className="text-sm text-[#B8A898] line-through">
+                        {food.originalPrice}
+                      </span>
+                    </div>
 
-                    <span className="text-sm text-[#B8A898] line-through">
-                      {food.originalPrice}
-                    </span>
-                  </div>
-
-                  <div>
-                    <p className="text-xs text-[#9E8A78]">Rescue</p>
-
-                    <span className="text-2xl font-bold text-[#091413]">
-                      {food.rescuePrice}
-                    </span>
-                  </div>
-                </div>
-
-                {/* STOCK */}
-                <div className="mb-5 flex items-center justify-between rounded-2xl bg-[#F8F4EF] p-4">
-                  <div>
-                    <p className="text-xs text-[#9E8A78]">Stock Left</p>
-
-                    <h3 className="mt-1 text-2xl font-bold text-[#091413]">
-                      {food.stock}
-                    </h3>
-                  </div>
-
-                  <div className="text-right">
-                    <p className="text-xs text-[#9E8A78]">CO₂ Saved</p>
-
-                    <div className="mt-1 flex items-center gap-1 text-[#AC7F5E]">
-                      <Leaf size={15} />
-
-                      <span className="font-semibold">{food.co2}</span>
+                    <div className="text-right">
+                      <p className="text-xs text-[#9E8A78]">Rescue Price</p>
+                      <span className="text-2xl font-bold text-[#091413]">
+                        {food.rescuePrice}
+                      </span>
                     </div>
                   </div>
                 </div>
