@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 
 export default function CheckoutPage() {
   const handleCompleteOrder = () => {
-    window.location.href = "/landing_page";
+    window.location.href = "/";
   }
   
 
@@ -16,7 +16,7 @@ export default function CheckoutPage() {
       {/* LEFT */}
       <section className="border-r border-[#E3DBD1] p-10">
         <div className="mb-10">
-          <Link href="/menu_page" className="text-sm text-[#091413]/65 flex items-center gap-3" ><X /> Shopping Cart | Orders</Link>
+          <Link href="/menu" className="text-sm text-[#091413]/65 flex items-center gap-3" ><X /> Shopping Cart | Orders</Link>
 
           <div className="mt-8 flex items-center gap-3">
             <h1 className="text-4xl font-bold text-[#091413]">Order Summary</h1>

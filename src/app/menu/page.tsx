@@ -1,8 +1,8 @@
 import Navbar from "./components/navbarMenu";
-import HeroSection from "../landing_page/components/hero";
+import HeroSection from "../(home)/components/hero";
 import { Clock3, SearchIcon } from "lucide-react";
 import Image from "next/image";
-import ImpactSection from "../landing_page/components/impact";
+import ImpactSection from "../(home)/components/impact";
 import Footer from "@/components/layout/footer";
 
 export default function Menu() {

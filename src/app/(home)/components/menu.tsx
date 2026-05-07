@@ -73,7 +73,7 @@ export default function MenuSection() {
         {/* MENU SCROLL */}
         {/* button view all buat ke menu page tapi belom diarahin, arahin sebduru */}
         <button
-          onClick={() => router.push("/menu_page")}
+          onClick={() => router.push("/menu")}
           className="text-[#AC7F5E] hover:text-[#8B5A2B] ml-300 mt-25"
         >
           View All

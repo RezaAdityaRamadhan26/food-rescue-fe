@@ -10,7 +10,7 @@ import { FavoriteUMKM } from "./components/favoriteUMKM";
 import { Achievements } from "./components/achivement";
 import { QuickActions } from "./components/quickAction";
 import { WeeklyChart } from "./components/weeklyChart";
-import Navbar from "../buyer_profile/components/navbarProfile";
+import Navbar from "../buyer-profile/components/navbarProfile";
 import Footer from "@/components/layout/footer";
 
 const OrganicPattern = () => (
