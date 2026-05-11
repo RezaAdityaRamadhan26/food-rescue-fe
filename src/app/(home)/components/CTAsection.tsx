@@ -1,8 +1,35 @@
 "use client";
 
-import Link from "next/link";
+import { useAuthStore } from "@/store/AuthStore";
+import { useRouter } from "next/navigation";
 
 export default function CTASection() {
+  const router = useRouter();
+  const { user, token } = useAuthStore();
+
+  const handleMulaiJual = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (token && user) {
+      if (user.role === "MERCHANT") {
+        router.push("/seller");
+      } else {
+        alert(
+          "Anda masuk sebagai Pembeli. Untuk mulai berjualan, silakan keluar terlebih dahulu dan daftar sebagai Penjual (UMKM)."
+        );
+      }
+    } else {
+      router.push("/register?role=MERCHANT");
+    }
+  };
+
+  const handleScrollToMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const menuSection = document.getElementById("menu");
+    if (menuSection) {
+      menuSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <section id="contact" className="bg-[#FFFAF5] px-8 py-40 lg:px-16">
       <div className="mx-auto flex max-w-5xl flex-col items-center text-center">
@@ -11,21 +38,20 @@ export default function CTASection() {
         </h1>
 
         <div className="mt-30 flex flex-wrap items-center justify-center gap-10">
-
-          <Link
-            href="#menu"
-            className="flex h-22 w-72 font-serif items-center justify-center rounded-[24px] bg-[#BBAB8C] text-[25px] font-medium text-[#FFFCFB] transition duration-300 hover:opacity-90"
+          <button
+            onClick={handleScrollToMenu}
+            className="flex h-22 w-72 font-serif items-center justify-center rounded-[24px] bg-[#BBAB8C] text-[25px] font-medium text-[#FFFCFB] transition duration-300 hover:opacity-90 cursor-pointer"
           >
             Lihat Menu
-          </Link>
+          </button>
 
           {/* BUTTON SELLER */}
-          <Link
-            href="#seller"
-            className="flex h-22 w-72 font-serif items-center justify-center rounded-[24px] bg-[#BBAB8C] text-[25px] font-medium text-[#FFFCFB] transition duration-300 hover:opacity-90"
+          <button
+            onClick={handleMulaiJual}
+            className="flex h-22 w-72 font-serif items-center justify-center rounded-[24px] bg-[#BBAB8C] text-[25px] font-medium text-[#FFFCFB] transition duration-300 hover:opacity-90 cursor-pointer"
           >
             Mulai Jual
-          </Link>
+          </button>
         </div>
       </div>
     </section>

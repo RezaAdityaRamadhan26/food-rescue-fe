@@ -1,8 +1,27 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/AuthStore";
 
 export default function SellerSection() {
+  const router = useRouter();
+  const { user, token } = useAuthStore();
+
+  const handleMulaiJual = () => {
+    if (token && user) {
+      if (user.role === "MERCHANT") {
+        router.push("/seller");
+      } else {
+        alert(
+          "Anda masuk sebagai Pembeli. Untuk mulai berjualan, silakan keluar terlebih dahulu dan daftar sebagai Penjual (UMKM)."
+        );
+      }
+    } else {
+      router.push("/register?role=MERCHANT");
+    }
+  };
+
   const features = [
     {
       icon: "/images/icon1.png",
@@ -95,6 +114,13 @@ export default function SellerSection() {
               </div>
             ))}
           </div>
+
+          <button
+            onClick={handleMulaiJual}
+            className="mt-14 rounded-[18px] bg-[#AC7F5E] px-9 py-4 text-[17px] font-medium text-[#FFFCFB] transition hover:opacity-90 cursor-pointer"
+          >
+            Mulai Jual Sekarang
+          </button>
         </div>
       </div>
     </section>

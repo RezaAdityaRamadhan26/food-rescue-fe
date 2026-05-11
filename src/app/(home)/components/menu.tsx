@@ -20,6 +20,7 @@ export default function MenuSection() {
   const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [timeTick, setTimeTick] = useState(0);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -34,6 +35,13 @@ export default function MenuSection() {
       setIsLoading(false);
     };
     fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeTick((t) => t + 1);
+    }, 1000);
+    return () => clearInterval(interval);
   }, []);
 
   const formatPrice = (price: number) =>

@@ -75,7 +75,7 @@ export default function Navbar() {
     ${scrolled 
     ? "border-b border-white/20 bg-[#E3DBD1]/80 backdrop-blur-md" 
     : "bg-transparent"}`}>
-      <div className="mx-auto flex max-w-7xl items-center justify-between">
+      <div className="mx-auto flex max-w-7xl items-center justify-between relative">
         <Link
           href="/"
           className="text-xl font-bold tracking-wide text-[#091413]"
@@ -83,7 +83,7 @@ export default function Navbar() {
           LOGO
         </Link>
 
-        <ul className="hidden items-center gap-10 md:flex">
+        <ul className="hidden items-center gap-10 md:flex md:absolute md:left-1/2 md:-translate-x-1/2">
           {navLinks.map((item) => (
             <li key={item.href}>
               <a
@@ -101,23 +101,25 @@ export default function Navbar() {
           ))}
         </ul>
 
-        <div className="flex items-center gap-4 text-[#091413]">
+        <div className="flex items-center gap-6 text-[#091413]">
           {token ? (
             <>
-              <button className="transition hover:opacity-70">
-                <Bell size={25} strokeWidth={1.8} />
-              </button>
+              <div className="flex items-center gap-4">
+                <button className="flex items-center justify-center transition hover:opacity-70">
+                  <Bell size={24} strokeWidth={1.8} />
+                </button>
 
-              <Link
-                href={user?.role === "MERCHANT" ? "/seller" : "/buyer-profile"}
-                className="transition hover:opacity-70"
-              >
-                <CircleUserRound size={30} strokeWidth={1.8} />
-              </Link>
+                <Link
+                  href={user?.role === "MERCHANT" ? "/seller" : "/buyer-profile"}
+                  className="flex items-center justify-center transition hover:opacity-70"
+                >
+                  <CircleUserRound size={24} strokeWidth={1.8} />
+                </Link>
+              </div>
 
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-2 rounded-xl bg-[#AC7F5E]/10 px-3 py-2 text-sm font-medium text-[#AC7F5E] transition hover:bg-[#AC7F5E]/20"
+                className="flex items-center gap-2 rounded-xl bg-[#AC7F5E]/10 px-4 py-2.5 text-sm font-medium text-[#AC7F5E] transition hover:bg-[#AC7F5E]/20"
               >
                 <LogOut size={16} />
                 Keluar

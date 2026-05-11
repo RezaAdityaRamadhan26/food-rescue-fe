@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
   Eye,
@@ -21,9 +21,18 @@ type Role = "CUSTOMER" | "MERCHANT";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const queryRole = searchParams.get("role");
   const { register, isLoading, error, clearError } = useAuthStore();
 
   const [role, setRole] = useState<Role>("CUSTOMER");
+
+  useEffect(() => {
+    if (queryRole === "MERCHANT" || queryRole === "CUSTOMER") {
+      setRole(queryRole as Role);
+    }
+  }, [queryRole]);
+
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

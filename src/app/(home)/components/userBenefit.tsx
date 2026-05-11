@@ -1,8 +1,28 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/AuthStore";
 
 export default function UserBenefitSection() {
+  const router = useRouter();
+  const { user, token } = useAuthStore();
+
+  const handleMulaiSekarang = () => {
+    if (token && user) {
+      if (user.role === "MERCHANT") {
+        router.push("/seller");
+      } else {
+        const menuSection = document.getElementById("menu");
+        if (menuSection) {
+          menuSection.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+    } else {
+      router.push("/register");
+    }
+  };
+
   return (
     <section
       id="benefits"
@@ -40,7 +60,10 @@ export default function UserBenefitSection() {
           </div>
 
           {/* BUTTON */}
-          <button className="mt-14 rounded-[18px] bg-[#BBAB8C] px-9 py-4 text-[17px] font-medium text-[#FFFCFB] transition hover:opacity-90">
+          <button
+            onClick={handleMulaiSekarang}
+            className="mt-14 rounded-[18px] bg-[#BBAB8C] px-9 py-4 text-[17px] font-medium text-[#FFFCFB] transition hover:opacity-90 cursor-pointer"
+          >
             Mulai Sekarang
           </button>
         </div>
