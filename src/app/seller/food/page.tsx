@@ -14,6 +14,8 @@ import {
   Trash2,
   TrendingUp,
   X,
+  Store,
+  ShoppingBag,
 } from "lucide-react";
 import axiosInstance from "@/lib/axios";
 
@@ -105,6 +107,21 @@ export default function FoodManagementPage() {
     init();
   }, []);
 
+  // Lock background scroll when modal is open
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+    };
+  }, [isModalOpen]);
+
   const handleDelete = async (id: string) => {
     if (id.startsWith("fallback-")) {
       alert("Ini adalah data contoh dan tidak bisa dihapus dari database.");
@@ -174,11 +191,9 @@ export default function FoodManagementPage() {
     }
   };
 
-  // Compute stats dynamically
-  const activeFoodsCount = foods.length > 0 ? foods.length : fallbackFoods.length;
-  const rescuedCount = foods.length > 0 
-    ? foods.reduce((acc, f) => acc + (f.rescued || 0), 0)
-    : fallbackFoods.reduce((acc, f) => acc + f.rescued, 0);
+  // Compute stats dynamically from database
+  const activeFoodsCount = foods.length;
+  const rescuedCount = foods.reduce((acc, f) => acc + (f.rescued || 0), 0);
 
   const stats = [
     {
@@ -187,6 +202,7 @@ export default function FoodManagementPage() {
       desc: "Produk aktif di tokomu",
       color: "bg-[#AC7F5E]",
       text: "text-white",
+      icon: ShoppingBag,
     },
     {
       title: "Total Rescued",
@@ -194,6 +210,7 @@ export default function FoodManagementPage() {
       desc: "Total porsi yang diselamatkan",
       color: "bg-[#FDFAF6]",
       text: "text-[#091413]",
+      icon: Package2,
     },
     {
       title: "Restoran Partner",
@@ -201,6 +218,7 @@ export default function FoodManagementPage() {
       desc: "Menyelamatkan limbah makanan",
       color: "bg-[#FDFAF6]",
       text: "text-[#091413]",
+      icon: Store,
     },
     {
       title: "CO₂ Saved",
@@ -208,26 +226,11 @@ export default function FoodManagementPage() {
       desc: "Dampak lingkungan positif",
       color: "bg-[#FDFAF6]",
       text: "text-[#091413]",
+      icon: Leaf,
     },
   ];
 
-  const displayFoods = foods.length > 0 
-    ? foods 
-    : fallbackFoods.map(f => ({
-        id: f.id,
-        name: f.title,
-        description: "",
-        originalPrice: f.originalPrice,
-        sellingPrice: f.rescuePrice,
-        stock: f.stock,
-        imageUrl: f.image,
-        type: "REGULAR",
-        category: { categoryName: f.category },
-        rescued: f.rescued,
-        total: f.total,
-        closing: f.closing,
-        status: f.status,
-      }));
+  const displayFoods = foods;
 
   if (isLoading) {
     return (
@@ -265,191 +268,230 @@ export default function FoodManagementPage() {
 
       {/* STATS */}
       <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {stats.map((item, index) => (
-          <motion.div
-            key={item.title}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.08 }}
-            className={`rounded-[28px] border border-[#EEE2D4] p-5 shadow-[0_4px_20px_rgba(45,31,20,0.04)] ${item.color}`}
-          >
-            <div className="mb-6 flex items-center justify-between">
-              <div>
-                <p className={`text-sm ${index === 0 ? "text-[#FFFCFB]" : "text-[#9E8A78]"}`}>
-                  {item.title}
-                </p>
-                <h2 className={`mt-3 text-5xl font-bold ${item.text}`}>
-                  {item.value}
-                </h2>
-              </div>
-              <div
-                className={`flex h-12 w-12 items-center justify-center rounded-2xl ${
-                  index === 0 ? "bg-[#FFFCFB]/10 text-[#FFFCFB]" : "bg-[#FFFCFB] text-[#091413]"
-                }`}
-              >
-                <TrendingUp size={20} />
-              </div>
-            </div>
-            <div className={`text-sm ${index === 0 ? "text-[#FFFCFB]/75" : "text-[#9E8A78]"}`}>
-              {item.desc}
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* FOOD GRID */}
-      <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
-        {displayFoods.map((food, index) => {
-          const rescued = food.rescued || 0;
-          const total = food.total || (food.stock + rescued) || 10;
-          const progress = total > 0 ? (rescued / total) * 100 : 0;
-          const isLowStock = food.stock > 0 && food.stock <= 3;
-          const isSoldOut = food.stock === 0;
-
-          const statusLabel = isSoldOut ? "Sold Out" : isLowStock ? "Low Stock" : "Available";
-
+        {stats.map((item, index) => {
+          const StatIcon = item.icon;
           return (
             <motion.div
-              key={food.id}
+              key={item.title}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.08 }}
-              className="group overflow-hidden rounded-[30px] border border-[#EEE2D4] bg-[#FDFAF6] shadow-[0_4px_20px_rgba(45,31,20,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(45,31,20,0.08)]"
+              className={`rounded-[28px] border border-[#EEE2D4] p-5 shadow-[0_4px_20px_rgba(45,31,20,0.04)] ${item.color}`}
             >
-              {/* IMAGE */}
-              <div className="relative h-56 overflow-hidden bg-gray-100">
-                {food.imageUrl ? (
-                  <Image
-                    src={food.imageUrl.startsWith("http") ? food.imageUrl : `http://localhost:8000/${food.imageUrl}`}
-                    alt={food.name}
-                    fill
-                    className="object-cover transition duration-500 group-hover:scale-105"
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center bg-gradient-to-br from-[#AC7F5E]/10 to-[#BBAB8C]/10">
-                    <Leaf size={48} className="text-[#AC7F5E]/40" />
-                  </div>
-                )}
-
-                <div className="absolute inset-0 bg-gradient-to-t from-[#091413]/70 via-transparent to-transparent" />
-
-                <div className="absolute left-4 top-4">
-                  <div
-                    className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                      statusLabel === "Available"
-                        ? "bg-[#F5E6D3] text-[#AC7F5E]"
-                        : statusLabel === "Low Stock"
-                          ? "bg-[#FFE8CC] text-[#B7791F]"
-                          : "bg-[#F8D7DA] text-[#C53030]"
-                    }`}
-                  >
-                    {statusLabel}
-                  </div>
+              <div className="mb-6 flex items-center justify-between">
+                <div>
+                  <p className={`text-sm ${index === 0 ? "text-[#FFFCFB]" : "text-[#9E8A78]"}`}>
+                    {item.title}
+                  </p>
+                  <h2 className={`mt-3 font-bold ${item.text} ${
+                    item.value.length > 8 
+                      ? "text-3xl" 
+                      : item.value.length > 5 
+                        ? "text-4xl" 
+                        : "text-5xl"
+                  }`}>
+                    {item.value}
+                  </h2>
                 </div>
-
-                {food.type === "FLASH_SALE" && (
-                  <div className="absolute right-4 top-4">
-                    <div className="rounded-full bg-[#E53E3E] px-3 py-1 text-xs font-bold text-white uppercase tracking-wider animate-pulse">
-                      ⚡ Flash Sale
-                    </div>
-                  </div>
-                )}
-
-                <div className="absolute bottom-4 left-4 flex items-center gap-2 rounded-full bg-black/30 px-3 py-1 backdrop-blur-md">
-                  <Clock3 size={14} className="text-white" />
-                  <span className="text-xs font-medium text-white">
-                    {food.type === "FLASH_SALE" ? "Flash Sale Active" : "Ready Today"}
-                  </span>
+                <div
+                  className={`flex h-12 w-12 items-center justify-center rounded-2xl ${
+                    index === 0 ? "bg-[#FFFCFB]/10 text-[#FFFCFB]" : "bg-[#FFFCFB] text-[#091413]"
+                  }`}
+                >
+                  <StatIcon size={20} className={index === 0 ? "text-[#FFFCFB]" : "text-[#AC7F5E]"} />
                 </div>
               </div>
-
-              {/* CONTENT */}
-              <div className="p-5">
-                <div className="mb-4 flex items-start justify-between gap-4">
-                  <div>
-                    <h2 className="text-xl font-bold text-[#091413] line-clamp-1">
-                      {food.name}
-                    </h2>
-                    <p className="mt-1 text-sm text-[#9E8A78]">
-                      {food.category?.categoryName || "Uncategorized"}
-                    </p>
-                  </div>
-
-                  <div className="flex flex-col items-end gap-2">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#F5EFE6] text-[#AC7F5E]">
-                      <Package2 size={18} />
-                    </div>
-                    <div className="text-right">
-                      <p className="text-xs text-[#9E8A78]">Stock Left</p>
-                      <h3 className="text-lg font-bold text-[#091413]">
-                        {food.stock}
-                      </h3>
-                    </div>
-                  </div>
-                </div>
-
-                {/* PRICE */}
-                <div className="mb-5 rounded-2xl bg-[#F8F4EF] p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs text-[#9E8A78]">Original Price</p>
-                      <span className="text-sm text-[#B8A898] line-through">
-                        Rp {food.originalPrice.toLocaleString("id-ID")}
-                      </span>
-                    </div>
-
-                    <div className="text-right">
-                      <p className="text-xs text-[#9E8A78]">Rescue Price</p>
-                      <span className="text-2xl font-bold text-[#091413]">
-                        Rp {food.sellingPrice.toLocaleString("id-ID")}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* PROGRESS */}
-                <div className="mb-5">
-                  <div className="mb-2 flex items-center justify-between">
-                    <p className="text-sm font-medium text-[#091413]">
-                      Rescue Progress
-                    </p>
-                    <span className="text-sm text-[#7C5B3A]">
-                      {rescued}/{total}
-                    </span>
-                  </div>
-                  <div className="h-3 overflow-hidden rounded-full bg-[#EEE2D4]">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${progress}%` }}
-                      transition={{ duration: 1 }}
-                      className="h-full rounded-full bg-[#AC7F5E]"
-                    />
-                  </div>
-                </div>
-
-                {/* ACTIONS */}
-                <div className="flex gap-3">
-                  <button className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-[#AC7F5E] px-4 py-3 text-sm font-semibold text-white transition hover:opacity-90">
-                    <Pencil size={16} />
-                    Edit
-                  </button>
-
-                  <button 
-                    onClick={() => handleDelete(food.id)}
-                    className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[#EEE2D4] bg-white text-[#C53030] transition hover:bg-[#FBEBEB]"
-                  >
-                    <Trash2 size={18} />
-                  </button>
-                </div>
+              <div className={`text-sm ${index === 0 ? "text-[#FFFCFB]/75" : "text-[#9E8A78]"}`}>
+                {item.desc}
               </div>
             </motion.div>
           );
         })}
       </div>
 
+      {/* FOOD GRID / EMPTY STATE */}
+      {displayFoods.length === 0 ? (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col items-center justify-center rounded-[32px] border border-[#EEE2D4] bg-[#FDFAF6] p-12 text-center shadow-[0_4px_20px_rgba(45,31,20,0.02)]"
+        >
+          <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-[#F5EFE6] text-[#AC7F5E] mb-6">
+            <Leaf size={36} className="animate-pulse" />
+          </div>
+          <h3 className="font-serif text-3xl font-semibold text-[#091413]">
+            Belum Ada Produk Rescue
+          </h3>
+          <p className="mt-3 max-w-md text-sm text-[#091413]/65 leading-relaxed">
+            Mulai kurangi food waste dan selamatkan pendapatan Anda dengan menambahkan produk makanan penyelamat pertama Anda sekarang!
+          </p>
+          <button
+            onClick={() => {
+              if (categories.length === 0) fetchCategories();
+              setIsModalOpen(true);
+            }}
+            className="mt-8 flex items-center gap-2 rounded-2xl bg-[#AC7F5E] px-6 py-3.5 text-sm font-semibold text-[#FFFCFB] transition hover:scale-[1.02] hover:bg-[#8B6A4A]"
+          >
+            <Plus size={18} /> Tambah Makanan
+          </button>
+        </motion.div>
+      ) : (
+        <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
+          {displayFoods.map((food, index) => {
+            const rescued = food.rescued || 0;
+            const total = food.total || (food.stock + rescued) || 10;
+            const progress = total > 0 ? (rescued / total) * 100 : 0;
+            const isLowStock = food.stock > 0 && food.stock <= 3;
+            const isSoldOut = food.stock === 0;
+
+            const statusLabel = isSoldOut ? "Sold Out" : isLowStock ? "Low Stock" : "Available";
+
+            return (
+              <motion.div
+                key={food.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.08 }}
+                className="group overflow-hidden rounded-[30px] border border-[#EEE2D4] bg-[#FDFAF6] shadow-[0_4px_20px_rgba(45,31,20,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(45,31,20,0.08)]"
+              >
+                {/* IMAGE */}
+                <div className="relative h-56 overflow-hidden bg-gray-100">
+                  {food.imageUrl ? (
+                    <Image
+                      src={food.imageUrl.startsWith("http") ? food.imageUrl : `http://localhost:8000/${food.imageUrl}`}
+                      alt={food.name}
+                      fill
+                      className="object-cover transition duration-500 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center bg-gradient-to-br from-[#AC7F5E]/10 to-[#BBAB8C]/10">
+                      <Leaf size={48} className="text-[#AC7F5E]/40" />
+                    </div>
+                  )}
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#091413]/70 via-transparent to-transparent" />
+
+                  <div className="absolute left-4 top-4">
+                    <div
+                      className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                        statusLabel === "Available"
+                          ? "bg-[#F5E6D3] text-[#AC7F5E]"
+                          : statusLabel === "Low Stock"
+                            ? "bg-[#FFE8CC] text-[#B7791F]"
+                            : "bg-[#F8D7DA] text-[#C53030]"
+                      }`}
+                    >
+                      {statusLabel}
+                    </div>
+                  </div>
+
+                  {food.type === "FLASH_SALE" && (
+                    <div className="absolute right-4 top-4">
+                      <div className="rounded-full bg-[#E53E3E] px-3 py-1 text-xs font-bold text-white uppercase tracking-wider animate-pulse">
+                        ⚡ Flash Sale
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="absolute bottom-4 left-4 flex items-center gap-2 rounded-full bg-black/30 px-3 py-1 backdrop-blur-md">
+                    <Clock3 size={14} className="text-white" />
+                    <span className="text-xs font-medium text-white">
+                      {food.type === "FLASH_SALE" ? "Flash Sale Active" : "Ready Today"}
+                    </span>
+                  </div>
+                </div>
+
+                {/* CONTENT */}
+                <div className="p-5">
+                  <div className="mb-4 flex items-start justify-between gap-4">
+                    <div>
+                      <h2 className="text-xl font-bold text-[#091413] line-clamp-1">
+                        {food.name}
+                      </h2>
+                      <p className="mt-1 text-sm text-[#9E8A78]">
+                        {food.category?.categoryName || "Uncategorized"}
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col items-end gap-2">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#F5EFE6] text-[#AC7F5E]">
+                        <Package2 size={18} />
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xs text-[#9E8A78]">Stock Left</p>
+                        <h3 className="text-lg font-bold text-[#091413]">
+                          {food.stock}
+                        </h3>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* PRICE */}
+                  <div className="mb-5 rounded-2xl bg-[#F8F4EF] p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-xs text-[#9E8A78]">Original Price</p>
+                        <span className="text-sm text-[#B8A898] line-through">
+                          Rp {food.originalPrice.toLocaleString("id-ID")}
+                        </span>
+                      </div>
+
+                      <div className="text-right">
+                        <p className="text-xs text-[#9E8A78]">Rescue Price</p>
+                        <span className="text-2xl font-bold text-[#091413]">
+                          Rp {food.sellingPrice.toLocaleString("id-ID")}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* PROGRESS */}
+                  <div className="mb-5">
+                    <div className="mb-2 flex items-center justify-between">
+                      <p className="text-sm font-medium text-[#091413]">
+                        Rescue Progress
+                      </p>
+                      <span className="text-sm text-[#7C5B3A]">
+                        {rescued}/{total}
+                      </span>
+                    </div>
+                    <div className="h-3 overflow-hidden rounded-full bg-[#EEE2D4]">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${progress}%` }}
+                        transition={{ duration: 1 }}
+                        className="h-full rounded-full bg-[#AC7F5E]"
+                      />
+                    </div>
+                  </div>
+
+                  {/* ACTIONS */}
+                  <div className="flex gap-3">
+                    <button className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-[#AC7F5E] px-4 py-3 text-sm font-semibold text-white transition hover:opacity-90">
+                      <Pencil size={16} />
+                      Edit
+                    </button>
+
+                    <button 
+                      onClick={() => handleDelete(food.id)}
+                      className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[#EEE2D4] bg-white text-[#C53030] transition hover:bg-[#FBEBEB]"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+      )}
+
       {/* ADD FOOD MODAL */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs">
+        <div 
+          data-lenis-prevent
+          className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 p-4 backdrop-blur-xs overscroll-y-contain"
+        >
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -465,7 +507,11 @@ export default function FoodManagementPage() {
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4 max-h-[70vh] overflow-y-auto pr-1">
+            <form 
+              data-lenis-prevent
+              onSubmit={handleSubmit} 
+              className="space-y-4 max-h-[70vh] overflow-y-auto pr-1 overscroll-y-contain"
+            >
               {error && (
                 <div className="rounded-xl bg-red-50 p-4 text-sm text-red-600 border border-red-200">
                   {error}

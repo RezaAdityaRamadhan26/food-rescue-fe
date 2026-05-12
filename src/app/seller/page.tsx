@@ -88,16 +88,26 @@ export default function SellerDashboardPage() {
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
+
+      // Fetch owned products independently
       try {
-        const [prodRes, orderRes] = await Promise.all([
-          axiosInstance.get("/products/owned"),
-          axiosInstance.get("/orders"),
-        ]);
+        const prodRes = await axiosInstance.get("/products/owned");
         setProducts(prodRes.data.data || []);
-        setOrders(orderRes.data.data || []);
-      } catch {
-        // silently fail
+      } catch (error) {
+        console.error("Error fetching owned products on dashboard:", error);
+        setProducts([]);
       }
+
+      // Fetch orders independently
+      try {
+        const orderRes = await axiosInstance.get("/orders");
+        setOrders(orderRes.data.data || []);
+      } catch (error) {
+        console.error("Error fetching orders on dashboard:", error);
+        setOrders([]);
+      }
+
       setIsLoading(false);
     };
     fetchData();
@@ -120,34 +130,6 @@ export default function SellerDashboardPage() {
 
   const formatPrice = (price: number) =>
     `Rp${price.toLocaleString("id-ID")}`;
-
-  const completedOrders = orders.filter((o) => o.status === "COMPLETED").length;
-  const totalRevenue = orders
-    .filter((o) => o.status === "COMPLETED")
-    .reduce((sum, o) => sum + o.netSellerRevenue, 0);
-
-  const stats = [
-    {
-      title: "Total Produk",
-      value: String(products.length),
-      icon: ShoppingBag,
-    },
-    {
-      title: "Pesanan Masuk",
-      value: String(orders.length),
-      icon: Package,
-    },
-    {
-      title: "Selesai",
-      value: String(completedOrders),
-      icon: Leaf,
-    },
-    {
-      title: "Pendapatan",
-      value: formatPrice(totalRevenue),
-      icon: Users,
-    },
-  ];
 
   if (isLoading) {
     return (
@@ -200,46 +182,7 @@ export default function SellerDashboardPage() {
             </div>
           </div>
 
-          {/* STATS */}
-          <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {stats.map((item, index) => {
-              const Icon = item.icon;
 
-              return (
-                <div
-                  key={item.title}
-                  className={`rounded-[28px] border p-5 ${
-                    index === 0
-                      ? "border-[#28553D] bg-gradient-to-br from-[#AC7F5E] to-[#BBAB8C] text-[#FFFCFB]"
-                      : "border-[#EEE7DE] bg-[#FFFCFB]"
-                  }`}
-                >
-                  <div className="mb-6 flex items-start justify-between">
-                    <div>
-                      <p
-                        className={`text-sm ${
-                          index === 0 ? "text-[#FFFCFB]" : "text-[#091413]/65"
-                        }`}
-                      >
-                        {item.title}
-                      </p>
-                      <h2 className="mt-3 text-3xl font-bold">{item.value}</h2>
-                    </div>
-
-                    <div
-                      className={`flex h-11 w-11 items-center justify-center rounded-2xl ${
-                        index === 0
-                          ? "bg-[#FFFCFB]/10"
-                          : "bg-[#F5EFE6] text-[#7C5B3A]"
-                      }`}
-                    >
-                      <Icon size={20} />
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
 
           {/* GRID */}
           <div className="grid grid-cols-1 gap-5 xl:grid-cols-12">
