@@ -54,7 +54,7 @@ export function ProfileHero() {
             {greeting}, <span className="inline-block animate-bounce">✋</span>
           </div>
 
-          <h1 className="mb-1.5 font-serif text-[1.75rem] leading-[1.2] text-[#FFFCFB]">
+          <h1 className="mb-1.5 text-[1.75rem] leading-[1.2] text-[#FFFCFB]">
             {displayName}
           </h1>
 
