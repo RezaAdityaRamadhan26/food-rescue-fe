@@ -358,7 +358,7 @@ export default function FoodManagementPage() {
                 <div className="relative h-56 overflow-hidden bg-gray-100">
                   {food.imageUrl ? (
                     <Image
-                      src={food.imageUrl.startsWith("http") ? food.imageUrl : `http://localhost:8000/${food.imageUrl}`}
+                      src={food.imageUrl.startsWith("http") ? food.imageUrl : `https://food-rescue-be.vercel.app/${food.imageUrl}`}
                       alt={food.name}
                       fill
                       className="object-cover transition duration-500 group-hover:scale-105"
