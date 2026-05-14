@@ -97,8 +97,9 @@ export default function AppSidebar() {
                 const Icon = item.icon;
 
                 const isActive =
-                  pathname === item.href ||
-                  pathname.startsWith(item.href + "/");
+                  item.href === "/seller"
+                    ? pathname === "/seller"
+                    : pathname === item.href || pathname.startsWith(item.href + "/");
 
                 return (
                   <SidebarMenuItem key={item.href}>

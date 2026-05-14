@@ -31,16 +31,16 @@ export default function CTASection() {
   };
 
   return (
-    <section id="contact" className="bg-[#FFFAF5] px-8 py-40 lg:px-16">
+    <section id="contact" className="bg-[#FFFAF5] px-6 py-20 lg:py-32 lg:px-16">
       <div className="mx-auto flex max-w-5xl flex-col items-center text-center">
-        <h1 className="max-w-4xl font-serif text-5xl leading-tight tracking-[-0.03em] text-[#091413]">
+        <h1 className="max-w-4xl font-serif text-3xl md:text-5xl leading-tight tracking-[-0.03em] text-[#091413]">
           Bergabung Bersama Food Rescue dan Jadikan Setiap Makanan Lebih Berarti
         </h1>
 
-        <div className="mt-30 flex flex-wrap items-center justify-center gap-10">
+        <div className="mt-12 md:mt-20 flex flex-col sm:flex-row w-full sm:w-auto items-center justify-center gap-4 md:gap-8">
           <button
             onClick={handleScrollToMenu}
-            className="flex h-22 w-72 font-serif items-center justify-center rounded-[24px] bg-[#BBAB8C] text-[25px] font-medium text-[#FFFCFB] transition duration-300 hover:opacity-90 cursor-pointer"
+            className="flex h-16 md:h-20 w-full sm:w-64 font-serif items-center justify-center rounded-[20px] md:rounded-[24px] bg-[#BBAB8C] text-[20px] md:text-[24px] font-medium text-[#FFFCFB] transition duration-300 hover:opacity-90 cursor-pointer shadow-sm hover:scale-[0.98] active:scale-[0.95]"
           >
             Lihat Menu
           </button>
@@ -48,7 +48,7 @@ export default function CTASection() {
           {/* BUTTON SELLER */}
           <button
             onClick={handleMulaiJual}
-            className="flex h-22 w-72 font-serif items-center justify-center rounded-[24px] bg-[#BBAB8C] text-[25px] font-medium text-[#FFFCFB] transition duration-300 hover:opacity-90 cursor-pointer"
+            className="flex h-16 md:h-20 w-full sm:w-64 font-serif items-center justify-center rounded-[20px] md:rounded-[24px] bg-[#BBAB8C] text-[20px] md:text-[24px] font-medium text-[#FFFCFB] transition duration-300 hover:opacity-90 cursor-pointer shadow-sm hover:scale-[0.98] active:scale-[0.95]"
           >
             Mulai Jual
           </button>

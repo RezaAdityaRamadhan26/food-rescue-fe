@@ -796,17 +796,17 @@ export default function ImpactSection() {
   const umkm = useCounter(2847, 2600, inView);
 
   return (
-    <section ref={ref} className="min-h-screen py-28 px-6 bg-[#FFFCFB]">
+    <section ref={ref} className="min-h-screen py-20 lg:py-28 px-6 bg-[#FFFCFB]">
       <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-6">
-        <h1 className="text-5xl font-serif text-center text-[#091413] col-span-full">
+        <h1 className="text-4xl md:text-5xl font-serif text-center text-[#091413] col-span-full">
           Dampak Food Rescue
         </h1>
-        <p className="text-lg text-[#091413]/65 col-span-full text-center max-w-3xl mx-auto">
+        <p className="text-base md:text-lg text-[#091413]/65 col-span-full text-center max-w-3xl mx-auto">
           Kami bermitra dengan UMKM lokal untuk menyelamatkan kelebihan makanan,
           mengurangi emisi karbon, dan menciptakan perubahan yang berarti bagi
           masyarakat, satu makanan yang diselamatkan pada satu waktu.
         </p>
-        <div className="mt-15 mx-aut grid md:grid-cols-2 gap-6 col-span-full">
+        <div className="mt-10 md:mt-15 mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 col-span-full w-full">
           <MealsCard count={meals} inView={inView} />
           <CO2Card count={co2} inView={inView} />
           <WasteCard count={waste} inView={inView} />

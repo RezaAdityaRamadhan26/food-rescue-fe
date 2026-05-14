@@ -7,14 +7,14 @@ import { MapPin, Mail, Phone } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#E3DBD1] px-8 py-20 lg:px-16">
+    <footer className="bg-[#E3DBD1] px-6 py-12 md:py-16 lg:px-16 lg:py-20">
       <div className="mx-auto max-w-7xl">
-        <div className="grid gap-16 lg:grid-cols-[1.3fr_0.7fr_0.7fr_1fr]">
+        <div className="grid gap-12 md:grid-cols-2 lg:gap-16 lg:grid-cols-[1.3fr_0.7fr_0.7fr_1fr]">
           <div>
             <h2 className="text-[32px] font-semibold tracking-[-0.03em] text-[#091413]">
               Food Rescue
             </h2>
-            <p className="mt-6 max-w-110 text-lg leading-[1.8] text-[#5F5F5F]">
+            <p className="mt-6 max-w-full lg:max-w-[440px] text-base md:text-lg leading-[1.8] text-[#5F5F5F]">
               Selamatkan makanan berkualitas, kurangi limbah, dan bantu UMKM
               berkembang bersama Food Rescue.
             </p>

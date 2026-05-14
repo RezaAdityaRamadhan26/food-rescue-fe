@@ -10,6 +10,7 @@ import {
   BarChart3,
 } from "lucide-react";
 import axiosInstance from "@/lib/axios";
+import { useAuthStore } from "@/store/AuthStore";
 import {
   AreaChart,
   Area,
@@ -37,6 +38,7 @@ interface Order {
 }
 
 export default function SellerAnalyticsPage() {
+  const { user } = useAuthStore();
   const [orders, setOrders] = useState<Order[]>([]);
   const [products, setProducts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -49,8 +51,41 @@ export default function SellerAnalyticsPage() {
 
       // Fetch owned products independently
       try {
-        const prodRes = await axiosInstance.get("/products/owned");
-        setProducts(prodRes.data.data || []);
+        const [ownedRes, allRes] = await Promise.all([
+          axiosInstance.get("/products/owned").catch(() => ({ data: [] })),
+          axiosInstance.get("/products", { params: { limit: 100 } }).catch(() => ({ data: [] })),
+        ]);
+
+        const ownedData = ownedRes.data?.data?.products || ownedRes.data?.products || ownedRes.data?.data || ownedRes.data || [];
+        const ownedArray = Array.isArray(ownedData) ? ownedData : [];
+
+        const allData = allRes.data?.data?.products || allRes.data?.products || allRes.data?.data || allRes.data || [];
+        const allArray = Array.isArray(allData) ? allData : [];
+
+        const knownRestIds = new Set(ownedArray.map((p) => p.restaurantId).filter(Boolean));
+        if (user?.id) knownRestIds.add(user.id);
+
+        const knownRestNames = new Set(ownedArray.map((p) => p.restaurant?.name).filter(Boolean));
+        if (user?.fullname) knownRestNames.add(user.fullname);
+
+        const knownUserIds = new Set(ownedArray.map((p) => p.restaurant?.userId).filter(Boolean));
+        if (user?.id) knownUserIds.add(user.id);
+
+        const matchingFromAll = allArray.filter((p) => {
+          if (!p) return false;
+          if (p.restaurantId && knownRestIds.has(p.restaurantId)) return true;
+          if (p.restaurant?.id && knownRestIds.has(p.restaurant.id)) return true;
+          if (p.restaurant?.name && knownRestNames.has(p.restaurant.name)) return true;
+          if (p.restaurant?.userId && knownUserIds.has(p.restaurant.userId)) return true;
+          return false;
+        });
+
+        const mergedMap = new Map();
+        [...ownedArray, ...matchingFromAll].forEach((p) => {
+          if (p && p.id) mergedMap.set(p.id, p);
+        });
+
+        setProducts(Array.from(mergedMap.values()));
       } catch (err) {
         console.error("Error fetching owned products on analytics:", err);
         setProducts([]);
@@ -59,7 +94,8 @@ export default function SellerAnalyticsPage() {
       // Fetch orders independently
       try {
         const orderRes = await axiosInstance.get("/orders");
-        setOrders(orderRes.data.data || []);
+        const orderData = orderRes.data?.data?.orders || orderRes.data?.orders || orderRes.data?.data || orderRes.data || [];
+        setOrders(Array.isArray(orderData) ? orderData : []);
       } catch (err) {
         console.error("Error fetching orders on analytics:", err);
         setOrders([]);

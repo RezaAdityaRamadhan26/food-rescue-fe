@@ -24,13 +24,13 @@ export default function CaraKerjaSection() {
   ];
 
   return (
-    <section id="about" className="bg-[#FFFCFB] px-8 py-32 lg:px-16">
+    <section id="about" className="bg-[#FFFCFB] px-6 py-20 lg:py-32 lg:px-12">
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col items-center text-center">
-          <h1 className="mt-6 max-w-3xl font-serif text-5xl leading-[1.2] tracking-[-0.03em] text-[#091413]">
+          <h1 className="mt-6 max-w-3xl font-serif text-4xl md:text-5xl leading-[1.2] tracking-[-0.03em] text-[#091413]">
             Cara Kerja Food Rescue
           </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-[#5F5F5F]">
+          <p className="mt-4 md:mt-6 max-w-2xl text-base md:text-lg leading-relaxed text-[#5F5F5F]">
             3 langkah mudah untuk menikmati makanan enak dengan harga lebih
             hemat
           </p>

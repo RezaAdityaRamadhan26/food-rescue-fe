@@ -75,28 +75,30 @@ export default function MenuSection() {
   return (
     <section
       id="menu"
-      className="overflow-hidden bg-[#FFFCFB] px-8 py-32 lg:px-16"
+      className="overflow-hidden bg-[#FFFCFB] px-6 py-20 lg:py-32 lg:px-12"
     >
       <div className="mx-auto max-w-7xl">
-        <div className="flex flex-col items-center text-center">
-          <h1 className="mt-6 text-5xl leading-[1.15] tracking-[-0.03em] text-[#091413] font-serif">
-            Pilihan Makanan
-            <br />
-            Untuk Diselamatkan
-          </h1>
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8 md:mb-12">
+          <div className="text-center md:text-left">
+            <h1 className="text-4xl md:text-5xl leading-[1.15] tracking-[-0.03em] text-[#091413] font-serif">
+              Pilihan Makanan
+              <br className="hidden sm:inline" />
+              Untuk Diselamatkan
+            </h1>
 
-          <p className="mt-6 max-w-3xl text-lg leading-[1.8] text-[#091413] opacity-65">
-            Temukan makanan lezat dengan harga hemat, siap untuk kamu
-            selamatkan.
-          </p>
+            <p className="mt-4 max-w-2xl text-base md:text-lg leading-[1.8] text-[#091413] opacity-65">
+              Temukan makanan lezat dengan harga hemat, siap untuk kamu
+              selamatkan.
+            </p>
+          </div>
+
+          <button
+            onClick={() => router.push("/menu")}
+            className="text-[#AC7F5E] hover:text-[#8B5A2B] font-semibold text-base md:text-lg py-2 px-6 rounded-xl border border-[#AC7F5E]/20 hover:bg-[#AC7F5E]/10 transition shadow-sm"
+          >
+            View All
+          </button>
         </div>
-
-        <button
-          onClick={() => router.push("/menu")}
-          className="text-[#AC7F5E] hover:text-[#8B5A2B] ml-300 mt-25"
-        >
-          View All
-        </button>
 
         {isLoading ? (
           <div className="mt-10 flex justify-center">

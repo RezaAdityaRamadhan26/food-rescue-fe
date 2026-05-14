@@ -18,6 +18,7 @@ import {
   ShoppingBag,
 } from "lucide-react";
 import axiosInstance from "@/lib/axios";
+import { useAuthStore } from "@/store/AuthStore";
 
 const fallbackFoods = [
   {
@@ -62,6 +63,7 @@ const fallbackFoods = [
 ];
 
 export default function FoodManagementPage() {
+  const { user } = useAuthStore();
   const [foods, setFoods] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -82,8 +84,44 @@ export default function FoodManagementPage() {
 
   const fetchFoods = async () => {
     try {
-      const res = await axiosInstance.get("/products/owned");
-      setFoods(res.data.data || []);
+      const [ownedRes, allRes] = await Promise.all([
+        axiosInstance.get("/products/owned").catch(() => ({ data: [] })),
+        axiosInstance.get("/products", { params: { limit: 100 } }).catch(() => ({ data: [] })),
+      ]);
+
+      const ownedData = ownedRes.data?.data?.products || ownedRes.data?.products || ownedRes.data?.data || ownedRes.data || [];
+      const ownedArray = Array.isArray(ownedData) ? ownedData : [];
+
+      const allData = allRes.data?.data?.products || allRes.data?.products || allRes.data?.data || allRes.data || [];
+      const allArray = Array.isArray(allData) ? allData : [];
+
+      // Extract known merchant identifiers from ownedArray and user profile
+      const knownRestIds = new Set(ownedArray.map((p) => p.restaurantId).filter(Boolean));
+      if (user?.id) knownRestIds.add(user.id);
+
+      const knownRestNames = new Set(ownedArray.map((p) => p.restaurant?.name).filter(Boolean));
+      if (user?.fullname) knownRestNames.add(user.fullname);
+
+      const knownUserIds = new Set(ownedArray.map((p) => p.restaurant?.userId).filter(Boolean));
+      if (user?.id) knownUserIds.add(user.id);
+
+      // Find any additional products from allArray belonging to this merchant
+      const matchingFromAll = allArray.filter((p) => {
+        if (!p) return false;
+        if (p.restaurantId && knownRestIds.has(p.restaurantId)) return true;
+        if (p.restaurant?.id && knownRestIds.has(p.restaurant.id)) return true;
+        if (p.restaurant?.name && knownRestNames.has(p.restaurant.name)) return true;
+        if (p.restaurant?.userId && knownUserIds.has(p.restaurant.userId)) return true;
+        return false;
+      });
+
+      // Merge and deduplicate by id
+      const mergedMap = new Map();
+      [...ownedArray, ...matchingFromAll].forEach((p) => {
+        if (p && p.id) mergedMap.set(p.id, p);
+      });
+
+      setFoods(Array.from(mergedMap.values()));
     } catch {
       setFoods([]);
     }
