@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Bell, CircleUserRound } from "lucide-react";
+import { Bell, CircleUserRound, Leaf } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function Navbar() {
@@ -26,11 +26,11 @@ export default function Navbar() {
     : "bg-transparent"}`}>
       <div className="mx-auto flex max-w-7xl items-center justify-between">
         <Link
-          href="/"
-          className="text-xl font-bold tracking-wide text-[#091413]"
-        >
-          LOGO
-        </Link>
+            href="/"
+            className="text-2xl flex items-center gap-2 italic tracking-tighter text-[#091413]"
+          >
+            <Leaf></Leaf> Food Rescue
+          </Link>
 
         <ul className="hidden items-center gap-10 md:flex font-medium text-[#091413] text-[15px]">
             <li><Link href="/">Home</Link></li>

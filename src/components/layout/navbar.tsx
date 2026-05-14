@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Bell, CircleUserRound, LogOut, Menu, X } from "lucide-react";
+import { Bell, CircleUserRound, Leaf, LogOut, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "@/store/AuthStore";
 import { useRouter } from "next/navigation";
@@ -111,9 +111,9 @@ export default function Navbar() {
         <div className="flex flex-1 items-center">
           <Link
             href="/"
-            className="text-2xl font-black tracking-tighter text-[#091413]"
+            className="text-2xl flex items-center gap-2 italic tracking-tighter text-[#091413]"
           >
-            LOGO
+            <Leaf></Leaf> Food Rescue
           </Link>
         </div>
 
