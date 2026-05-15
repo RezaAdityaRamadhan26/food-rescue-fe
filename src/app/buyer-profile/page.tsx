@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { Leaf } from "lucide-react";
 
 import { ProfileHero } from "./components/profileHero";
@@ -75,7 +76,7 @@ function OrdersPage() {
         </p>
       </div>
 
-      <RecentOrders />
+      <RecentOrders isFullPage={true} />
     </div>
   );
 }
@@ -171,8 +172,9 @@ function renderPage(tab: string) {
   }
 }
 
-export default function Profile() {
-  const [activeTab, setActiveTab] = useState("dashboard");
+function ProfileContent() {
+  const searchParams = useSearchParams();
+  const activeTab = searchParams.get("tab") || "dashboard";
 
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden bg-[#FFFCFB]">
@@ -186,7 +188,7 @@ export default function Profile() {
       </div>
 
       {/* CONTENT */}
-      <main className="relative z-10 flex-1 overflow-y-auto px-4 pt-24 pb-24 md:px-6 lg:px-8 lg:pb-8">
+      <main className="relative flex-1 overflow-y-auto px-4 pt-24 pb-24 md:px-6 lg:px-8 lg:pb-8">
         {renderPage(activeTab)}
       </main>
 
@@ -202,5 +204,13 @@ export default function Profile() {
       </div>
       <Footer></Footer>
     </div>
+  );
+}
+
+export default function Profile() {
+  return (
+    <Suspense fallback={<div className="flex h-screen w-screen items-center justify-center">Loading...</div>}>
+      <ProfileContent />
+    </Suspense>
   );
 }

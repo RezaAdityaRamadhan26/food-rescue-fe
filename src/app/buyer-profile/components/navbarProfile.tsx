@@ -34,9 +34,9 @@ export default function Navbar() {
 
         <ul className="hidden items-center gap-10 md:flex font-medium text-[#091413] text-[15px]">
             <li><Link href="/">Home</Link></li>
+            <li><Link href="/buyer-profile?tab=dashboard">Dashboard</Link></li>
+            <li><Link href="/buyer-profile?tab=orders">Pesanan Saya</Link></li>
             <li><Link href="/menu">Menu</Link></li>
-            <li><Link href="/#about">About Us</Link></li>
-            <li><Link href="/#contact">Contact Us</Link></li>
         </ul>
 
         <div className="flex items-center gap-8 text-[#091413]">
