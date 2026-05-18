@@ -121,6 +121,13 @@ const mealsSparkData = [
   { v: 130 },
 ];
 
+// ensure charts only render after mount to avoid width/height -1 in SSR
+const useIsMounted = () => {
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => setIsMounted(true), []);
+  return isMounted;
+};
+
 const monthlyWaste = [
   { m: "Jan", p: 62 },
   { m: "Feb", p: 71 },
@@ -186,8 +193,7 @@ function MealsCard({ count, inView }: { count: number; inView: boolean }) {
         padding: "32px",
         overflow: "hidden",
         position: "relative",
-      }}
-    >
+      }}>
       {/* Card inner glow */}
       <div
         style={{
@@ -209,13 +215,11 @@ function MealsCard({ count, inView }: { count: number; inView: boolean }) {
               background: "rgba(185,141,103,0.12)",
               borderRadius: "12px",
               padding: "8px",
-            }}
-          >
+            }}>
             <svg
               viewBox="0 0 24 24"
               fill="none"
-              style={{ width: 18, height: 18, color: "#B98D67" }}
-            >
+              style={{ width: 18, height: 18, color: "#B98D67" }}>
               <path
                 d="M18 8h1a4 4 0 0 1 0 8h-1"
                 stroke="currentColor"
@@ -263,8 +267,7 @@ function MealsCard({ count, inView }: { count: number; inView: boolean }) {
               fontWeight: 500,
               letterSpacing: "0.08em",
               color: "#9A8070",
-            }}
-          >
+            }}>
             MEALS RESCUED
           </span>
         </div>
@@ -274,8 +277,7 @@ function MealsCard({ count, inView }: { count: number; inView: boolean }) {
             background: "rgba(44,90,55,0.09)",
             borderRadius: "20px",
             padding: "4px 10px",
-          }}
-        >
+          }}>
           <TrendingUp size={11} style={{ color: "#2C5A37" }} />
           <span
             style={{
@@ -283,8 +285,7 @@ function MealsCard({ count, inView }: { count: number; inView: boolean }) {
               fontSize: "11.5px",
               fontWeight: 600,
               color: "#2C5A37",
-            }}
-          >
+            }}>
             +24.8%
           </span>
         </div>
@@ -299,8 +300,7 @@ function MealsCard({ count, inView }: { count: number; inView: boolean }) {
           lineHeight: 1,
           marginBottom: "5px",
           letterSpacing: "-0.02em",
-        }}
-      >
+        }}>
         {count.toLocaleString()}
       </div>
       <p
@@ -310,34 +310,50 @@ function MealsCard({ count, inView }: { count: number; inView: boolean }) {
           color: "#9A8070",
           marginBottom: "22px",
           lineHeight: 1.5,
-        }}
-      >
+        }}>
         Meals rescued and counting
       </p>
 
       {/* Sparkline */}
       <div style={{ height: "62px", marginBottom: "6px" }}>
-        <ResponsiveContainer width="100%" height="100%">
-          <AreaChart
-            data={mealsSparkData}
-            margin={{ top: 5, right: 0, bottom: 0, left: 0 }}
-          >
-            <defs>
-              <linearGradient id="mealGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#B98D67" stopOpacity={0.22} />
-                <stop offset="95%" stopColor="#B98D67" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <Area
-              type="monotone"
-              dataKey="v"
+        {useIsMounted() ? (
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart
+              data={mealsSparkData}
+              margin={{ top: 5, right: 0, bottom: 0, left: 0 }}>
+              <defs>
+                <linearGradient id="mealGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#B98D67" stopOpacity={0.22} />
+                  <stop offset="95%" stopColor="#B98D67" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <Area
+                type="monotone"
+                dataKey="v"
+                stroke="#B98D67"
+                strokeWidth={2}
+                fill="url(#mealGrad)"
+                dot={false}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        ) : (
+          <svg
+            width="100%"
+            height="100%"
+            viewBox="0 0 100 40"
+            preserveAspectRatio="none">
+            <polyline
+              points="0,30 20,20 40,24 60,12 80,8 100,2"
+              fill="none"
               stroke="#B98D67"
-              strokeWidth={2}
-              fill="url(#mealGrad)"
-              dot={false}
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              opacity="0.25"
             />
-          </AreaChart>
-        </ResponsiveContainer>
+          </svg>
+        )}
       </div>
       <div className="flex justify-between">
         {["Jan", "Mar", "May", "Jul", "Sep", "Nov"].map((m, i) => (
@@ -347,8 +363,7 @@ function MealsCard({ count, inView }: { count: number; inView: boolean }) {
               fontFamily: "'Inter', sans-serif",
               fontSize: "10px",
               color: "#C4B5A8",
-            }}
-          >
+            }}>
             {m}
           </span>
         ))}
@@ -374,8 +389,7 @@ function CO2Card({ count, inView }: { count: number; inView: boolean }) {
         padding: "32px",
         position: "relative",
         overflow: "hidden",
-      }}
-    >
+      }}>
       <div
         style={{
           position: "absolute",
@@ -395,8 +409,7 @@ function CO2Card({ count, inView }: { count: number; inView: boolean }) {
             background: "rgba(44,90,55,0.1)",
             borderRadius: "12px",
             padding: "8px",
-          }}
-        >
+          }}>
           <Wind size={18} style={{ color: "#2C5A37" }} />
         </div>
         <span
@@ -406,8 +419,7 @@ function CO2Card({ count, inView }: { count: number; inView: boolean }) {
             fontWeight: 500,
             letterSpacing: "0.08em",
             color: "#9A8070",
-          }}
-        >
+          }}>
           CO₂ PREVENTED
         </span>
       </div>
@@ -419,8 +431,7 @@ function CO2Card({ count, inView }: { count: number; inView: boolean }) {
             height: "96px",
             position: "relative",
             flexShrink: 0,
-          }}
-        >
+          }}>
           <CircleArc pct={78} animate={inView} />
           <div
             style={{
@@ -430,8 +441,7 @@ function CO2Card({ count, inView }: { count: number; inView: boolean }) {
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-            }}
-          >
+            }}>
             <span
               style={{
                 fontFamily: "'Inter', sans-serif",
@@ -439,8 +449,7 @@ function CO2Card({ count, inView }: { count: number; inView: boolean }) {
                 fontWeight: 700,
                 color: "#B98D67",
                 lineHeight: 1,
-              }}
-            >
+              }}>
               78%
             </span>
             <span
@@ -449,8 +458,7 @@ function CO2Card({ count, inView }: { count: number; inView: boolean }) {
                 fontSize: "9.5px",
                 color: "#C4B5A8",
                 marginTop: "2px",
-              }}
-            >
+              }}>
               annual goal
             </span>
           </div>
@@ -466,8 +474,7 @@ function CO2Card({ count, inView }: { count: number; inView: boolean }) {
               lineHeight: 1,
               letterSpacing: "-0.02em",
               marginBottom: "4px",
-            }}
-          >
+            }}>
             {count.toLocaleString()}
             <span
               style={{
@@ -475,8 +482,7 @@ function CO2Card({ count, inView }: { count: number; inView: boolean }) {
                 color: "#B98D67",
                 fontWeight: 500,
                 marginLeft: "3px",
-              }}
-            >
+              }}>
               t
             </span>
           </div>
@@ -486,8 +492,7 @@ function CO2Card({ count, inView }: { count: number; inView: boolean }) {
               fontSize: "13px",
               color: "#9A8070",
               lineHeight: 1.6,
-            }}
-          >
+            }}>
             Metric tons of CO₂
             <br />
             prevented this year
@@ -499,8 +504,7 @@ function CO2Card({ count, inView }: { count: number; inView: boolean }) {
         style={{
           borderTop: "1px solid rgba(185,141,103,0.12)",
           paddingTop: "16px",
-        }}
-      >
+        }}>
         <div className="flex flex-wrap gap-x-5 gap-y-2">
           {[
             { dot: "#B98D67", text: "≈ 267 cars removed" },
@@ -521,8 +525,7 @@ function CO2Card({ count, inView }: { count: number; inView: boolean }) {
                   fontFamily: "'Inter', sans-serif",
                   fontSize: "12px",
                   color: "#9A8070",
-                }}
-              >
+                }}>
                 {item.text}
               </span>
             </div>
@@ -550,8 +553,7 @@ function WasteCard({ count, inView }: { count: number; inView: boolean }) {
         padding: "32px",
         position: "relative",
         overflow: "hidden",
-      }}
-    >
+      }}>
       <div
         style={{
           position: "absolute",
@@ -571,8 +573,7 @@ function WasteCard({ count, inView }: { count: number; inView: boolean }) {
             background: "rgba(185,141,103,0.12)",
             borderRadius: "12px",
             padding: "8px",
-          }}
-        >
+          }}>
           <Leaf size={18} style={{ color: "#B98D67" }} />
         </div>
         <span
@@ -582,8 +583,7 @@ function WasteCard({ count, inView }: { count: number; inView: boolean }) {
             fontWeight: 500,
             letterSpacing: "0.08em",
             color: "#9A8070",
-          }}
-        >
+          }}>
           FOOD WASTE REDUCED
         </span>
       </div>
@@ -597,8 +597,7 @@ function WasteCard({ count, inView }: { count: number; inView: boolean }) {
           lineHeight: 1,
           letterSpacing: "-0.02em",
           marginBottom: "5px",
-        }}
-      >
+        }}>
         {count}
         <span style={{ color: "#B98D67" }}>%</span>
       </div>
@@ -608,8 +607,7 @@ function WasteCard({ count, inView }: { count: number; inView: boolean }) {
           fontSize: "13px",
           color: "#9A8070",
           marginBottom: "20px",
-        }}
-      >
+        }}>
         Reduction from partner restaurants
       </p>
 
@@ -624,8 +622,7 @@ function WasteCard({ count, inView }: { count: number; inView: boolean }) {
                 color: "#C4B5A8",
                 width: "26px",
                 flexShrink: 0,
-              }}
-            >
+              }}>
               {item.m}
             </span>
             <div
@@ -635,8 +632,7 @@ function WasteCard({ count, inView }: { count: number; inView: boolean }) {
                 background: "rgba(185,141,103,0.09)",
                 borderRadius: "3px",
                 overflow: "hidden",
-              }}
-            >
+              }}>
               <motion.div
                 initial={{ width: 0 }}
                 animate={inView ? { width: `${item.p}%` } : { width: 0 }}
@@ -660,8 +656,7 @@ function WasteCard({ count, inView }: { count: number; inView: boolean }) {
                 width: "28px",
                 textAlign: "right",
                 flexShrink: 0,
-              }}
-            >
+              }}>
               {item.p}%
             </span>
           </div>
@@ -681,8 +676,7 @@ export function UMKMCard({ count, inView }: UMKMCardProps) {
         duration: 0.9,
         delay: 0.46,
         ease: [0.16, 1, 0.3, 1],
-      }}
-    >
+      }}>
       {/* ── Glow Effects ── */}
       <div style={glowTop} />
       <div style={glowBottom} />
@@ -695,8 +689,7 @@ export function UMKMCard({ count, inView }: UMKMCardProps) {
               background: "rgba(185,141,103,0.15)",
               borderRadius: "12px",
               padding: "8px",
-            }}
-          >
+            }}>
             <Store size={18} style={{ color: "#C9A882" }} />
           </div>
 
@@ -707,8 +700,7 @@ export function UMKMCard({ count, inView }: UMKMCardProps) {
               fontWeight: 500,
               letterSpacing: "0.08em",
               color: "rgba(185,141,103,0.65)",
-            }}
-          >
+            }}>
             LOCAL UMKM PARTNERS
           </span>
         </div>
@@ -718,8 +710,7 @@ export function UMKMCard({ count, inView }: UMKMCardProps) {
             background: "rgba(185,141,103,0.1)",
             borderRadius: "50%",
             padding: "6px",
-          }}
-        >
+          }}>
           <ArrowUpRight size={14} style={{ color: "rgba(185,141,103,0.6)" }} />
         </div>
       </div>
@@ -734,8 +725,7 @@ export function UMKMCard({ count, inView }: UMKMCardProps) {
           lineHeight: 1,
           letterSpacing: "-0.02em",
           marginBottom: "6px",
-        }}
-      >
+        }}>
         {count.toLocaleString()}
       </div>
 
@@ -746,8 +736,7 @@ export function UMKMCard({ count, inView }: UMKMCardProps) {
           color: "rgba(246,241,234,0.45)",
           marginBottom: "22px",
           lineHeight: 1.5,
-        }}
-      >
+        }}>
         Businesses across 24 cities
       </p>
 
@@ -776,8 +765,7 @@ export function UMKMCard({ count, inView }: UMKMCardProps) {
                 fontFamily: "'Inter', sans-serif",
                 fontSize: "11.5px",
                 color: "rgba(246,241,234,0.45)",
-              }}
-            >
+              }}>
               {item.text}
             </span>
           </div>
@@ -796,7 +784,9 @@ export default function ImpactSection() {
   const umkm = useCounter(2847, 2600, inView);
 
   return (
-    <section ref={ref} className="min-h-screen py-20 lg:py-28 px-6 bg-[#FFFCFB]">
+    <section
+      ref={ref}
+      className="min-h-screen py-20 lg:py-28 px-6 bg-[#FFFCFB]">
       <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-6">
         <h1 className="text-4xl md:text-5xl font-serif text-center text-[#091413] col-span-full">
           Dampak Food Rescue

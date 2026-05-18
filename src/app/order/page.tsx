@@ -1,8 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Image from "next/image";
-import { CreditCard, MapPin, ShieldCheck, X, CheckCircle2, Recycle, UtensilsCrossed } from "lucide-react";
+import {
+  CreditCard,
+  MapPin,
+  ShieldCheck,
+  X,
+  CheckCircle2,
+  Recycle,
+  UtensilsCrossed,
+} from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -18,7 +26,7 @@ interface Product {
   imageUrl: string | null;
 }
 
-export default function CheckoutPage() {
+function CheckoutPageInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -27,7 +35,9 @@ export default function CheckoutPage() {
 
   const [product, setProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(qty);
-  const [deliveryType, setDeliveryType] = useState<"PICKUP" | "DELIVERY">("PICKUP");
+  const [deliveryType, setDeliveryType] = useState<"PICKUP" | "DELIVERY">(
+    "PICKUP",
+  );
   const [address, setAddress] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -53,8 +63,7 @@ export default function CheckoutPage() {
     fetchProduct();
   }, [productId]);
 
-  const formatPrice = (price: number) =>
-    `Rp${price.toLocaleString("id-ID")}`;
+  const formatPrice = (price: number) => `Rp${price.toLocaleString("id-ID")}`;
 
   const handleCompleteOrder = async () => {
     if (!product) return;
@@ -88,7 +97,9 @@ export default function CheckoutPage() {
   if (!product) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-[#FFFCFB]">
-        <p className="text-xl text-[#091413]/50">Tidak ada produk untuk dipesan</p>
+        <p className="text-xl text-[#091413]/50">
+          Tidak ada produk untuk dipesan
+        </p>
         <Link href="/menu" className="mt-4 text-[#AC7F5E] underline">
           Kembali ke Menu
         </Link>
@@ -107,8 +118,7 @@ export default function CheckoutPage() {
         <div className="mb-10">
           <Link
             href="/menu"
-            className="text-sm text-[#091413]/65 flex items-center gap-3"
-          >
+            className="text-sm text-[#091413]/65 flex items-center gap-3">
             <X /> Kembali ke Menu
           </Link>
 
@@ -172,7 +182,9 @@ export default function CheckoutPage() {
         {/* Total */}
         <div className="rounded-3xl border border-[#E3DBD1] bg-[#FFFCFB] p-6">
           <div className="mb-4 flex justify-between">
-            <span className="text-[#091413]/65">{product.name} × {quantity}</span>
+            <span className="text-[#091413]/65">
+              {product.name} × {quantity}
+            </span>
             <span className="font-semibold text-[#091413]">
               {formatPrice(subtotal)}
             </span>
@@ -225,12 +237,8 @@ export default function CheckoutPage() {
                     deliveryType === "PICKUP"
                       ? "border-[#A67B5B] bg-[#F4E8D5]"
                       : "border-[#E5D7C4] bg-[#FFFCFB]"
-                  }`}
-                >
-                  <CreditCard
-                    className="mb-3 text-[#7B6248]"
-                    size={22}
-                  />
+                  }`}>
+                  <CreditCard className="mb-3 text-[#7B6248]" size={22} />
 
                   <p className="font-semibold text-[#091413]">Self Pickup</p>
 
@@ -245,13 +253,14 @@ export default function CheckoutPage() {
                     deliveryType === "DELIVERY"
                       ? "border-[#A67B5B] bg-[#F4E8D5]"
                       : "border-[#E5D7C4] bg-[#FFFCFB]"
-                  }`}
-                >
+                  }`}>
                   <MapPin className="mb-3 text-[#7B6248]" size={22} />
 
                   <p className="font-semibold text-[#091413]">Delivery</p>
 
-                  <span className="text-sm text-[#8D7B68]">Antar ke alamatmu</span>
+                  <span className="text-sm text-[#8D7B68]">
+                    Antar ke alamatmu
+                  </span>
                 </button>
               </div>
             </div>
@@ -295,8 +304,7 @@ export default function CheckoutPage() {
             <Button
               onClick={handleCompleteOrder}
               disabled={isSubmitting}
-              className="mt-8 w-full h-15 rounded-2xl bg-[#BBAB8C] py-5 text-lg font-semibold text-[#FFFCFB] transition hover:bg-[#9c8f76] disabled:opacity-50"
-            >
+              className="mt-8 w-full h-15 rounded-2xl bg-[#BBAB8C] py-5 text-lg font-semibold text-[#FFFCFB] transition hover:bg-[#9c8f76] disabled:opacity-50">
               {isSubmitting ? (
                 <div className="h-6 w-6 animate-spin rounded-full border-2 border-white/30 border-t-white" />
               ) : (
@@ -305,11 +313,20 @@ export default function CheckoutPage() {
             </Button>
 
             <p className="mt-5 text-center text-sm text-[#8D7B68]">
-              By continuing you support food waste reduction <Recycle size={14} className="inline text-green-600" />
+              By continuing you support food waste reduction{" "}
+              <Recycle size={14} className="inline text-green-600" />
             </p>
           </>
         )}
       </section>
     </div>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense>
+      <CheckoutPageInner />
+    </Suspense>
   );
 }

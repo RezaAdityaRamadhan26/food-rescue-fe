@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
@@ -19,7 +19,7 @@ import { useAuthStore } from "@/store/AuthStore";
 
 type Role = "CUSTOMER" | "MERCHANT";
 
-export default function RegisterPage() {
+function RegisterPageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const queryRole = searchParams.get("role");
@@ -76,8 +76,8 @@ export default function RegisterPage() {
           </h1>
 
           <p className="text-lg leading-relaxed text-white/60">
-            Jadilah bagian dari komunitas yang peduli terhadap lingkungan dan membantu
-            mengurangi limbah makanan di Indonesia.
+            Jadilah bagian dari komunitas yang peduli terhadap lingkungan dan
+            membantu mengurangi limbah makanan di Indonesia.
           </p>
         </div>
       </div>
@@ -87,7 +87,9 @@ export default function RegisterPage() {
         <div className="w-full max-w-md">
           <div className="mb-2 flex items-center gap-2 lg:hidden">
             <Leaf size={24} className="text-[#5B8A6B]" />
-            <span className="text-xl font-bold text-[#091413]">Food Rescue</span>
+            <span className="text-xl font-bold text-[#091413]">
+              Food Rescue
+            </span>
           </div>
 
           <h2 className="mb-2 font-serif text-4xl text-[#091413]">Buat Akun</h2>
@@ -99,7 +101,9 @@ export default function RegisterPage() {
           {error && (
             <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-600">
               {error}
-              <button onClick={clearError} className="ml-2 font-semibold underline">
+              <button
+                onClick={clearError}
+                className="ml-2 font-semibold underline">
                 Tutup
               </button>
             </div>
@@ -114,8 +118,7 @@ export default function RegisterPage() {
                 role === "CUSTOMER"
                   ? "border-[#AC7F5E] bg-[#F4E8D5] text-[#5C4A3A]"
                   : "border-[#E7DAC8] bg-[#FFFCFB] text-[#091413]/60"
-              }`}
-            >
+              }`}>
               <User size={18} />
               Pembeli
             </button>
@@ -127,8 +130,7 @@ export default function RegisterPage() {
                 role === "MERCHANT"
                   ? "border-[#AC7F5E] bg-[#F4E8D5] text-[#5C4A3A]"
                   : "border-[#E7DAC8] bg-[#FFFCFB] text-[#091413]/60"
-              }`}
-            >
+              }`}>
               <Store size={18} />
               Penjual (UMKM)
             </button>
@@ -189,8 +191,7 @@ export default function RegisterPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="text-[#091413]/40 transition hover:text-[#091413]/70"
-                >
+                  className="text-[#091413]/40 transition hover:text-[#091413]/70">
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
@@ -244,8 +245,7 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="flex w-full items-center justify-center gap-3 rounded-2xl bg-[#BBAB8C] py-4 text-lg font-semibold text-white transition hover:bg-[#9c8f76] disabled:opacity-50"
-            >
+              className="flex w-full items-center justify-center gap-3 rounded-2xl bg-[#BBAB8C] py-4 text-lg font-semibold text-white transition hover:bg-[#9c8f76] disabled:opacity-50">
               {isLoading ? (
                 <div className="h-6 w-6 animate-spin rounded-full border-2 border-white/30 border-t-white" />
               ) : (
@@ -261,13 +261,20 @@ export default function RegisterPage() {
             Sudah punya akun?{" "}
             <Link
               href="/login"
-              className="font-semibold text-[#AC7F5E] transition hover:underline"
-            >
+              className="font-semibold text-[#AC7F5E] transition hover:underline">
               Masuk di sini
             </Link>
           </p>
         </div>
       </div>
     </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense>
+      <RegisterPageInner />
+    </Suspense>
   );
 }

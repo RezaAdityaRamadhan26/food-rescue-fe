@@ -47,7 +47,9 @@ interface Review {
 
 type InfoTab = "description" | "reviews";
 
-export default function FoodDetailsPage() {
+import { Suspense } from "react";
+
+function FoodDetailsPageInner() {
   const searchParams = useSearchParams();
   const productId = searchParams.get("id");
   const router = useRouter();
@@ -85,8 +87,7 @@ export default function FoodDetailsPage() {
     fetchReviews();
   }, [productId]);
 
-  const formatPrice = (price: number) =>
-    `Rp${price.toLocaleString("id-ID")}`;
+  const formatPrice = (price: number) => `Rp${price.toLocaleString("id-ID")}`;
 
   const handleAddToCart = () => {
     if (!product) return;
@@ -110,13 +111,16 @@ export default function FoodDetailsPage() {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-[#FFFCFB]">
         <Navbar />
-        <p className="mt-24 text-xl text-[#091413]/50">Produk tidak ditemukan</p>
+        <p className="mt-24 text-xl text-[#091413]/50">
+          Produk tidak ditemukan
+        </p>
       </div>
     );
   }
 
   const discount = Math.round(
-    ((product.originalPrice - product.sellingPrice) / product.originalPrice) * 100
+    ((product.originalPrice - product.sellingPrice) / product.originalPrice) *
+      100,
   );
   const savings = product.originalPrice - product.sellingPrice;
 
@@ -131,7 +135,9 @@ export default function FoodDetailsPage() {
 
   const avgRating =
     reviews.length > 0
-      ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+      ? (
+          reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+        ).toFixed(1)
       : "—";
 
   return (
@@ -154,7 +160,9 @@ export default function FoodDetailsPage() {
 
                   <div className="flex items-center gap-1.5 text-xs opacity-50">
                     <Star size={10} className="fill-[#BBAB8C] text-[#BBAB8C]" />
-                    <span>{avgRating} ({reviews.length} ulasan)</span>
+                    <span>
+                      {avgRating} ({reviews.length} ulasan)
+                    </span>
                   </div>
                 </div>
               </div>
@@ -168,8 +176,7 @@ export default function FoodDetailsPage() {
                   onClick={() => setIsFav(!isFav)}
                   className={`flex h-9 w-9 items-center justify-center rounded-full transition-all ${
                     isFav ? "bg-[#B98D67]/20" : "bg-[black/5]"
-                  }`}
-                >
+                  }`}>
                   <Heart
                     size={15}
                     className={
@@ -230,7 +237,9 @@ export default function FoodDetailsPage() {
               <div className="h-2 overflow-hidden rounded-full bg-[#091413]/10">
                 <div
                   className="h-full rounded-full bg-[#B98D67]"
-                  style={{ width: `${Math.min((product.stock / 10) * 100, 100)}%` }}
+                  style={{
+                    width: `${Math.min((product.stock / 10) * 100, 100)}%`,
+                  }}
                 />
               </div>
             </div>
@@ -276,8 +285,7 @@ export default function FoodDetailsPage() {
               <div className="flex items-center gap-4 rounded-3xl bg-[#FFFCFB] px-5">
                 <button
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                  className="text-xl opacity-40 transition-opacity hover:opacity-100"
-                >
+                  className="text-xl opacity-40 transition-opacity hover:opacity-100">
                   −
                 </button>
 
@@ -287,16 +295,14 @@ export default function FoodDetailsPage() {
                   onClick={() =>
                     setQuantity((q) => Math.min(product.stock, q + 1))
                   }
-                  className="text-xl opacity-40 transition-opacity hover:opacity-100"
-                >
+                  className="text-xl opacity-40 transition-opacity hover:opacity-100">
                   +
                 </button>
               </div>
 
               <button
                 onClick={handleAddToCart}
-                className="flex flex-1 items-center justify-center gap-2 rounded-3xl bg-[#BBAB8C] py-4 text-sm font-medium text-[#FFFCFB] transition-all active:scale-[0.98] hover:bg-[#9c8f76]"
-              >
+                className="flex flex-1 items-center justify-center gap-2 rounded-3xl bg-[#BBAB8C] py-4 text-sm font-medium text-[#FFFCFB] transition-all active:scale-[0.98] hover:bg-[#9c8f76]">
                 <ShoppingCart size={16} />
                 Pesan Sekarang — {formatPrice(product.sellingPrice * quantity)}
               </button>
@@ -315,8 +321,7 @@ export default function FoodDetailsPage() {
                   activeTab === tab
                     ? "border-[#BBAB8C] opacity-100"
                     : "border-transparent opacity-40"
-                }`}
-              >
+                }`}>
                 {tab === "reviews" ? `Ulasan (${reviews.length})` : "Deskripsi"}
               </button>
             ))}
@@ -349,8 +354,7 @@ export default function FoodDetailsPage() {
                     {reviews.map((review) => (
                       <div
                         key={review.id}
-                        className="rounded-2xl border border-[#E7DAC8] bg-[#FFFAF5] p-5"
-                      >
+                        className="rounded-2xl border border-[#E7DAC8] bg-[#FFFAF5] p-5">
                         <div className="mb-3 flex items-center justify-between">
                           <div className="flex items-center gap-3">
                             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#AC7F5E] text-sm font-semibold text-white">
@@ -367,7 +371,7 @@ export default function FoodDetailsPage() {
                                     day: "numeric",
                                     month: "long",
                                     year: "numeric",
-                                  }
+                                  },
                                 )}
                               </p>
                             </div>
@@ -405,5 +409,13 @@ export default function FoodDetailsPage() {
 
       <RelatedMeals meals={[]} />
     </div>
+  );
+}
+
+export default function FoodDetailsPage() {
+  return (
+    <Suspense>
+      <FoodDetailsPageInner />
+    </Suspense>
   );
 }

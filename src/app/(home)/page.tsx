@@ -7,6 +7,7 @@ import SellerHook from "@/app/(home)/components/SellerHook";
 import CTASection from "@/app/(home)/components/CTAsection";
 import Footer from "@/components/layout/footer";
 import ImpactSection from "./components/impact";
+import { Suspense } from "react";
 export default function Home() {
   return (
     <div>
@@ -15,7 +16,9 @@ export default function Home() {
       <MenuSection />
       <CaraKerjaSection />
       <UserBenefitSection />
-      <ImpactSection />
+      <Suspense>
+        <ImpactSection />
+      </Suspense>
       <SellerHook />
       <CTASection />
       <Footer />
