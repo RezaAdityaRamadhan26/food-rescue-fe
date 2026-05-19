@@ -7,6 +7,13 @@ import { useAuthStore } from "@/store/AuthStore";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
+// 1. Definisikan tipe data NavLink
+type NavLink = {
+  href: string;
+  label: string;
+  isFullUrl?: boolean;
+};
+
 export default function Navbar() {
   const [activeSection, setActiveSection] = useState("home");
   const [scrolled, setScrolled] = useState(false);
@@ -53,22 +60,23 @@ export default function Navbar() {
     };
   }, []);
 
-  const baseNavLinks = [
+  // 2. Terapkan tipe NavLink[] ke array
+  const baseNavLinks: NavLink[] = [
     { href: "home", label: "Home" },
     { href: "menu", label: "Menu" },
   ];
 
-  const authNavLinks = token && user?.role === "CUSTOMER" ? [
+  const authNavLinks: NavLink[] = token && user?.role === "CUSTOMER" ? [
     { href: "buyer-profile?tab=dashboard", label: "Dashboard", isFullUrl: true },
     { href: "buyer-profile?tab=orders", label: "Pesanan Saya", isFullUrl: true },
   ] : [];
 
-  const footerNavLinks = [
+  const footerNavLinks: NavLink[] = [
     { href: "about", label: "About Us" },
     { href: "contact", label: "Contact Us" },
   ];
 
-  const navLinks = [...baseNavLinks, ...authNavLinks, ...footerNavLinks];
+  const navLinks: NavLink[] = [...baseNavLinks, ...authNavLinks, ...footerNavLinks];
 
   useEffect(() => {
     const handleScroll = () => {
