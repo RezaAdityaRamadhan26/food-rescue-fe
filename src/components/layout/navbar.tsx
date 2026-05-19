@@ -53,12 +53,22 @@ export default function Navbar() {
     };
   }, []);
 
-  const navLinks = [
+  const baseNavLinks = [
     { href: "home", label: "Home" },
     { href: "menu", label: "Menu" },
+  ];
+
+  const authNavLinks = token && user?.role === "CUSTOMER" ? [
+    { href: "buyer-profile?tab=dashboard", label: "Dashboard", isFullUrl: true },
+    { href: "buyer-profile?tab=orders", label: "Pesanan Saya", isFullUrl: true },
+  ] : [];
+
+  const footerNavLinks = [
     { href: "about", label: "About Us" },
     { href: "contact", label: "Contact Us" },
   ];
+
+  const navLinks = [...baseNavLinks, ...authNavLinks, ...footerNavLinks];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -122,17 +132,30 @@ export default function Navbar() {
           <ul className="flex items-center gap-8">
             {navLinks.map((item) => (
               <li key={item.href}>
-                <a
-                  href={`#${item.href}`}
-                  onClick={(e) => scrollToSection(e, item.href)}
-                  className={`text-sm font-bold transition-colors duration-300 ${
-                    activeSection === item.href
-                      ? "text-[#AC7F5E]"
-                      : "text-[#091413]/70 hover:text-[#091413]"
-                  }`}
-                >
-                  {item.label}
-                </a>
+                {item.isFullUrl ? (
+                  <Link
+                    href={item.href}
+                    className={`text-sm font-bold transition-colors duration-300 ${
+                      activeSection === item.href
+                        ? "text-[#AC7F5E]"
+                        : "text-[#091413]/70 hover:text-[#091413]"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                ) : (
+                  <a
+                    href={`#${item.href}`}
+                    onClick={(e) => scrollToSection(e, item.href)}
+                    className={`text-sm font-bold transition-colors duration-300 ${
+                      activeSection === item.href
+                        ? "text-[#AC7F5E]"
+                        : "text-[#091413]/70 hover:text-[#091413]"
+                    }`}
+                  >
+                    {item.label}
+                  </a>
+                )}
               </li>
             ))}
           </ul>
@@ -200,17 +223,31 @@ export default function Navbar() {
               <ul className="flex flex-col gap-1">
                 {navLinks.map((item) => (
                   <li key={item.href}>
-                    <a
-                      href={`#${item.href}`}
-                      onClick={(e) => scrollToSection(e, item.href)}
-                      className={`block rounded-xl px-4 py-3 text-sm font-bold transition-colors ${
-                        activeSection === item.href
-                          ? "bg-[#AC7F5E]/10 text-[#AC7F5E]"
-                          : "text-[#091413]/70 hover:bg-black/5 hover:text-[#091413]"
-                      }`}
-                    >
-                      {item.label}
-                    </a>
+                    {item.isFullUrl ? (
+                      <Link
+                        href={item.href}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className={`block rounded-xl px-4 py-3 text-sm font-bold transition-colors ${
+                          activeSection === item.href
+                            ? "bg-[#AC7F5E]/10 text-[#AC7F5E]"
+                            : "text-[#091413]/70 hover:bg-black/5 hover:text-[#091413]"
+                        }`}
+                      >
+                        {item.label}
+                      </Link>
+                    ) : (
+                      <a
+                        href={`#${item.href}`}
+                        onClick={(e) => scrollToSection(e, item.href)}
+                        className={`block rounded-xl px-4 py-3 text-sm font-bold transition-colors ${
+                          activeSection === item.href
+                            ? "bg-[#AC7F5E]/10 text-[#AC7F5E]"
+                            : "text-[#091413]/70 hover:bg-black/5 hover:text-[#091413]"
+                        }`}
+                      >
+                        {item.label}
+                      </a>
+                    )}
                   </li>
                 ))}
               </ul>

@@ -80,13 +80,13 @@ export function RecentOrders({ isFullPage = false }: { isFullPage?: boolean }) {
     } else {
       document.body.style.overflow = "auto";
       const nav = document.querySelector("nav");
-      if (nav) nav.style.display = "flex";
+      if (nav) nav.style.display = "";
     }
     
     return () => {
       document.body.style.overflow = "auto";
       const nav = document.querySelector("nav");
-      if (nav) nav.style.display = "flex";
+      if (nav) nav.style.display = "";
     };
   }, [selectedOrder]);
 

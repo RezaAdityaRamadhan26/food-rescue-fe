@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import {
   Heart,
   MapPin,
@@ -20,7 +20,7 @@ import { CountdownTimer } from "./components/countdownTimer";
 import { ImageGallery } from "./components/imageGaller";
 import { RelatedMeals } from "./components/relatedMeals";
 import axiosInstance from "@/lib/axios";
-import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/AuthStore"; // <-- Tambahan Import AuthStore
 
 interface Product {
   id: string;
@@ -47,12 +47,13 @@ interface Review {
 
 type InfoTab = "description" | "reviews";
 
-import { Suspense } from "react";
-
 function FoodDetailsPageInner() {
   const searchParams = useSearchParams();
   const productId = searchParams.get("id");
   const router = useRouter();
+  
+  // <-- Mengambil token dari state management
+  const { token } = useAuthStore();
 
   const [product, setProduct] = useState<Product | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -91,6 +92,15 @@ function FoodDetailsPageInner() {
 
   const handleAddToCart = () => {
     if (!product) return;
+
+    // <-- PENGECEKAN LOGIN
+    // Jika tidak ada token (belum login), arahkan ke halaman login
+    if (!token) {
+      alert("Silakan Masuk (Login) terlebih dahulu untuk memesan makanan.");
+      router.push("/login");
+      return;
+    }
+
     // Navigate to order page with product info
     const params = new URLSearchParams({
       productId: product.id,

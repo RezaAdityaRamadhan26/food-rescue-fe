@@ -63,6 +63,25 @@ export default function SellerOrdersPage() {
   const [selectedOrder, setSelectedOrder] = useState<MerchantOrder | null>(null);
 
   useEffect(() => {
+    if (selectedOrder) {
+      document.body.style.overflow = "hidden";
+      // Find the sidebar and hide it if it's the main nav
+      const sidebar = document.querySelector("aside") || document.querySelector("[role='navigation']");
+      if (sidebar) (sidebar as HTMLElement).style.display = "none";
+    } else {
+      document.body.style.overflow = "auto";
+      const sidebar = document.querySelector("aside") || document.querySelector("[role='navigation']");
+      if (sidebar) (sidebar as HTMLElement).style.display = "";
+    }
+    
+    return () => {
+      document.body.style.overflow = "auto";
+      const sidebar = document.querySelector("aside") || document.querySelector("[role='navigation']");
+      if (sidebar) (sidebar as HTMLElement).style.display = "";
+    };
+  }, [selectedOrder]);
+
+  useEffect(() => {
     const fetchOrders = async () => {
       try {
         const res = await axiosInstance.get("/orders");
