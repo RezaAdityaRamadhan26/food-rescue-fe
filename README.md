@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Halo Panitia WCC! Repository ini berisi source code frontend untuk aplikasi Food Rescue yang kami kembangkan. Frontend ini dibuat menggunakan Next.js, React, dan Tailwind CSS.
 
-## Getting Started
+Berikut penjelasan singkat mengenai halaman-halaman utama, fungsinya, serta fitur yang sudah dan bisa dikembangkan ke depannya.
 
-First, run the development server:
+====================
+Daftar Halaman Utama
+====================
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. Landing Page
+	Halaman utama yang berisi penjelasan singkat tentang Food Rescue, cara kerja, manfaat, dan tombol untuk login atau daftar.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Login & Register
+	Untuk proses autentikasi pengguna, baik sebagai buyer maupun seller.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Dashboard Seller
+	Seller bisa memantau performa toko, pesanan masuk, dan produk yang dimiliki.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Orders Seller
+	Seller dapat melihat daftar pesanan yang masuk, mengubah status pesanan, dan membatalkan pesanan jika diperlukan.
 
-## Learn More
+5. Produk Seller
+	Seller dapat melihat, menambah, mengedit, dan menghapus produk yang dijual.
 
-To learn more about Next.js, take a look at the following resources:
+6. Analytics Seller
+	Seller bisa melihat statistik penjualan dan performa toko secara visual.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+7. Store Seller
+	Seller dapat mengatur profil toko, alamat, dan informasi lainnya.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+8. Settings Seller
+	Seller dapat mengatur preferensi akun dan pengaturan lainnya.
 
-## Deploy on Vercel
+9. Buyer Profile
+	Buyer dapat melihat profil, pesanan yang pernah dilakukan, statistik, dan produk favorit.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+10. Menu
+	 Menampilkan daftar makanan yang tersedia untuk dibeli oleh buyer.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+11. Food Details
+	 Menampilkan detail makanan, galeri gambar, countdown timer, dan rekomendasi makanan lain.
+
+12. Order
+	 Proses pemesanan makanan oleh buyer.
+
+====================
+Fitur yang Sudah dan Bisa Dikembangkan
+====================
+
+- Notifikasi real-time untuk pesanan baru
+- Chat antara buyer dan seller
+- Sistem rating dan ulasan produk
+- Integrasi pembayaran online
+- Fitur filter dan pencarian produk yang lebih lengkap
+- Dashboard analytics yang lebih detail
+- Manajemen stok otomatis
+- Fitur promosi atau diskon khusus
+
+====================
+Panduan Instalasi dan Menjalankan Project
+====================
+
+1. Extract folder ini
+2. Jalankan npm install --legacy-peer-deps untuk menginstall semua dependency
+3. Buat file .env.local di root folder, lalu isi variabel NEXT_PUBLIC_API_URL= https://food-rescue-be.vercel.app/api
+4. Jalankan projek dengan npm run dev
+
+Jika ada kendala saat instalasi atau menjalankan project, pastikan environment variable sudah benar dan backend sudah berjalan.
+
+Semoga penjelasan singkat ini bisa membantu panitia dalam melakukan review kode frontend kami. Terima kasih!
