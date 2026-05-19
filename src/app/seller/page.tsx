@@ -176,32 +176,32 @@ export default function SellerDashboardPage() {
   return (
     <div className="flex min-h-screen bg-[#FFFCFB]">
       <main className="min-h-screen flex-1">
-        <div className="p-6 lg:p-10">
+        <div className="p-4 sm:p-6 lg:p-10">
           {/* Header */}
-          <div className="mb-5 flex flex-col gap-4 rounded-[24px] border border-[#EEE7DE] bg-[#FFFCFB] p-4 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex h-12 w-full items-center gap-3 rounded-2xl border border-[#EFE7DD] bg-[#FFFCFB] px-4 lg:max-w-md">
+          <div className="mb-5 flex flex-col gap-4 rounded-[24px] border border-[#EEE7DE] bg-[#FFFCFB] p-3 sm:p-4 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex h-10 sm:h-12 w-full items-center gap-2 sm:gap-3 rounded-2xl border border-[#EFE7DD] bg-[#FFFCFB] px-3 sm:px-4 lg:max-w-md">
               <Search size={18} className="text-[#091413]/55" />
               <input
                 type="text"
                 placeholder="Search orders, products..."
-                className="w-full bg-transparent text-sm outline-none placeholder:text-[#091413]/55"
+                className="w-full bg-transparent text-xs sm:text-sm outline-none placeholder:text-[#091413]/55"
               />
             </div>
 
-            <div className="flex items-center gap-3">
-              <button className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[#EFE7DD] bg-[#FAF8F5] transition hover:scale-105">
+            <div className="flex items-center gap-2 sm:gap-3 mt-2 sm:mt-0">
+              <button className="flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-2xl border border-[#EFE7DD] bg-[#FAF8F5] transition hover:scale-105">
                 <Bell size={18} className="text-[#AC7F5E]" />
               </button>
 
-              <div className="flex items-center gap-3 rounded-2xl border border-[#EFE7DD] bg-[#FAF8F5] px-3 py-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#AC7F5E] text-sm font-bold text-white">
+              <div className="flex items-center gap-2 sm:gap-3 rounded-2xl border border-[#EFE7DD] bg-[#FAF8F5] px-2 sm:px-3 py-1.5 sm:py-2">
+                <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-[#AC7F5E] text-xs sm:text-sm font-bold text-white">
                   {user?.fullname?.charAt(0)?.toUpperCase() || "M"}
                 </div>
-                <div>
-                  <h3 className="text-sm font-semibold text-[#091413]">
+                <div className="hidden xs:block">
+                  <h3 className="text-xs sm:text-sm font-semibold text-[#091413]">
                     {user?.fullname || "Merchant"}
                   </h3>
-                  <p className="text-xs text-[#091413]/65">{user?.email}</p>
+                  <p className="text-[10px] sm:text-xs text-[#091413]/65">{user?.email}</p>
                 </div>
               </div>
             </div>
@@ -219,9 +219,9 @@ export default function SellerDashboardPage() {
 
 
           {/* GRID */}
-          <div className="grid grid-cols-1 gap-5 xl:grid-cols-12">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-12">
             {/* ORDERS */}
-            <div className="rounded-[28px] border border-[#EEE7DE] bg-[#FFFCFB] p-5 xl:col-span-8">
+            <div className="rounded-[20px] md:rounded-[28px] border border-[#EEE7DE] bg-[#FFFCFB] p-4 md:p-5 xl:col-span-8">
               <div className="mb-5 flex items-center justify-between">
                 <div>
                   <h2 className="text-xl font-semibold text-[#091413]">
@@ -242,31 +242,31 @@ export default function SellerDashboardPage() {
                   {orders.map((order) => (
                     <div
                       key={order.id}
-                      className="flex items-center justify-between rounded-2xl border border-[#F1EBE3] bg-[#FFFCFB] p-4"
+                      className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 rounded-2xl border border-[#F1EBE3] bg-[#FFFCFB] p-3 sm:p-4"
                     >
-                      <div className="flex items-center gap-4">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#FFFCFB]">
+                      <div className="flex items-center gap-3 sm:gap-4">
+                        <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-[#FFFCFB]">
                           <ShoppingBag size={18} className="text-[#AC7F5E]" />
                         </div>
 
                         <div>
-                          <h3 className="font-semibold text-[#091413]">
+                          <h3 className="font-semibold text-xs sm:text-base text-[#091413]">
                             {order.user?.fullname || "Customer"}
                           </h3>
-                          <p className="text-sm text-[#091413]/65">
+                          <p className="text-xs sm:text-sm text-[#091413]/65">
                             {order.product?.name} × {order.quantity}
                           </p>
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2 sm:gap-3 mt-2 sm:mt-0">
                         <div className="text-right">
-                          <p className="text-sm font-semibold text-[#091413]">
+                          <p className="text-xs sm:text-sm font-semibold text-[#091413]">
                             {formatPrice(order.totalPaidByBuyer)}
                           </p>
 
                           <div
-                            className={`mt-1 inline-block rounded-full px-3 py-1 text-xs font-semibold ${
+                            className={`mt-1 inline-block rounded-full px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-semibold ${
                               statusColors[order.status] || "bg-gray-100 text-gray-600"
                             }`}
                           >
@@ -280,7 +280,7 @@ export default function SellerDashboardPage() {
                             onClick={() =>
                               handleUpdateStatus(order.id, nextStatus[order.status])
                             }
-                            className="flex h-9 w-9 items-center justify-center rounded-xl bg-green-100 text-green-700 transition hover:bg-green-200"
+                            className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-green-100 text-green-700 transition hover:bg-green-200"
                             title="Lanjutkan status"
                           >
                             <CheckCircle size={16} />
@@ -291,7 +291,7 @@ export default function SellerDashboardPage() {
                           order.status !== "CANCELLED" && (
                             <button
                               onClick={() => handleCancelOrder(order.id)}
-                              className="flex h-9 w-9 items-center justify-center rounded-xl bg-red-100 text-red-600 transition hover:bg-red-200"
+                              className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-red-100 text-red-600 transition hover:bg-red-200"
                               title="Batalkan"
                             >
                               <XCircle size={16} />
@@ -305,7 +305,7 @@ export default function SellerDashboardPage() {
             </div>
 
             {/* MY PRODUCTS */}
-            <div className="rounded-[28px] border border-[#EEE7DE] bg-[#FFFCFB] p-5 xl:col-span-4">
+            <div className="rounded-[20px] md:rounded-[28px] border border-[#EEE7DE] bg-[#FFFCFB] p-4 md:p-5 xl:col-span-4 mt-5 md:mt-0">
               <div className="mb-5">
                 <h2 className="text-xl font-semibold text-[#091413]">
                   Produk Saya
@@ -324,9 +324,9 @@ export default function SellerDashboardPage() {
                   {products.map((product) => (
                     <div
                       key={product.id}
-                      className="flex items-center gap-3 rounded-2xl border border-[#F1EBE3] bg-[#FFFAF5] p-3"
+                      className="flex items-center gap-2 sm:gap-3 rounded-2xl border border-[#F1EBE3] bg-[#FFFAF5] p-2 sm:p-3"
                     >
-                      <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-[#F0E8DC]">
+                      <div className="relative h-10 w-10 sm:h-14 sm:w-14 shrink-0 overflow-hidden rounded-xl bg-[#F0E8DC]">
                         {product.imageUrl ? (
                           <Image
                             src={product.imageUrl}
@@ -340,16 +340,16 @@ export default function SellerDashboardPage() {
                       </div>
 
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-semibold text-[#091413]">
+                        <p className="truncate text-xs sm:text-sm font-semibold text-[#091413]">
                           {product.name}
                         </p>
-                        <p className="text-xs text-[#091413]/50">
+                        <p className="text-[10px] sm:text-xs text-[#091413]/50">
                           {formatPrice(product.sellingPrice)} · Stok {product.stock}
                         </p>
                       </div>
 
                       {product.stock <= 3 && (
-                        <span className="shrink-0 rounded-full bg-red-100 px-2 py-0.5 text-[0.6rem] font-semibold text-red-600">
+                        <span className="shrink-0 rounded-full bg-red-100 px-2 py-0.5 text-[9px] sm:text-[0.6rem] font-semibold text-red-600">
                           Low
                         </span>
                       )}
@@ -360,7 +360,7 @@ export default function SellerDashboardPage() {
             </div>
 
             {/* CTA */}
-            <div className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#AC7F5E] to-[#BBAB8C] p-6 text-[#FFFCFB] xl:col-span-12">
+            <div className="relative overflow-hidden rounded-[20px] md:rounded-[28px] bg-gradient-to-br from-[#AC7F5E] to-[#BBAB8C] p-4 md:p-6 text-[#FFFCFB] xl:col-span-12 mt-5">
               <div className="absolute -right-10 -top-10 h-60 w-60 rounded-full bg-[#FFFCFB]/5" />
 
               <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
