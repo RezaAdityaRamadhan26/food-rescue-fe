@@ -61,22 +61,13 @@ export default function Navbar() {
   }, []);
 
   // 2. Terapkan tipe NavLink[] ke array
-  const baseNavLinks: NavLink[] = [
+  // Selalu 4 menu saja: Home, Menu, About, Contact Us
+  const navLinks: NavLink[] = [
     { href: "home", label: "Home" },
     { href: "menu", label: "Menu" },
-  ];
-
-  const authNavLinks: NavLink[] = token && user?.role === "CUSTOMER" ? [
-    { href: "buyer-profile?tab=dashboard", label: "Dashboard", isFullUrl: true },
-    { href: "buyer-profile?tab=orders", label: "Pesanan Saya", isFullUrl: true },
-  ] : [];
-
-  const footerNavLinks: NavLink[] = [
     { href: "about", label: "About Us" },
     { href: "contact", label: "Contact Us" },
   ];
-
-  const navLinks: NavLink[] = [...baseNavLinks, ...authNavLinks, ...footerNavLinks];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -96,11 +87,17 @@ export default function Navbar() {
     router.push("/");
   };
 
-  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+  const scrollToSection = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    id: string,
+  ) => {
     e.preventDefault();
     setIsMobileMenuOpen(false);
-    
-    if (window.location.pathname !== "/" && window.location.pathname !== "/home") {
+
+    if (
+      window.location.pathname !== "/" &&
+      window.location.pathname !== "/home"
+    ) {
       router.push(`/#${id}`);
       return;
     }
@@ -122,15 +119,13 @@ export default function Navbar() {
         scrolled
           ? "bg-white/85 py-4 shadow-xs border-b border-black/5 backdrop-blur-xl"
           : "bg-transparent py-6"
-      }`}
-    >
+      }`}>
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 lg:px-12">
         {/* Left side - Logo */}
         <div className="flex flex-1 items-center">
           <Link
             href="/"
-            className="text-2xl flex items-center gap-2 italic tracking-tighter text-[#091413]"
-          >
+            className="text-2xl flex items-center gap-2 italic tracking-tighter text-[#091413]">
             <Leaf></Leaf> Food Rescue
           </Link>
         </div>
@@ -147,8 +142,7 @@ export default function Navbar() {
                       activeSection === item.href
                         ? "text-[#AC7F5E]"
                         : "text-[#091413]/70 hover:text-[#091413]"
-                    }`}
-                  >
+                    }`}>
                     {item.label}
                   </Link>
                 ) : (
@@ -159,8 +153,7 @@ export default function Navbar() {
                       activeSection === item.href
                         ? "text-[#AC7F5E]"
                         : "text-[#091413]/70 hover:text-[#091413]"
-                    }`}
-                  >
+                    }`}>
                     {item.label}
                   </a>
                 )}
@@ -174,28 +167,33 @@ export default function Navbar() {
           {token ? (
             <>
               <button className="transition-colors hover:text-[#AC7F5E]">
-                <Bell size={22} strokeWidth={2.5} className="text-[#091413] hover:text-[#AC7F5E] transition-colors" />
+                <Bell
+                  size={22}
+                  strokeWidth={2.5}
+                  className="text-[#091413] hover:text-[#AC7F5E] transition-colors"
+                />
               </button>
 
               <Link
                 href={user?.role === "MERCHANT" ? "/seller" : "/buyer-profile"}
-                className="transition-colors hover:text-[#AC7F5E]"
-              >
-                <CircleUserRound size={22} strokeWidth={2.5} className="text-[#091413] hover:text-[#AC7F5E] transition-colors" />
+                className="transition-colors hover:text-[#AC7F5E]">
+                <CircleUserRound
+                  size={22}
+                  strokeWidth={2.5}
+                  className="text-[#091413] hover:text-[#AC7F5E] transition-colors"
+                />
               </Link>
             </>
           ) : (
             <>
               <Link
                 href="/login"
-                className="text-sm font-bold text-[#091413] transition hover:text-[#AC7F5E]"
-              >
+                className="text-sm font-bold text-[#091413] transition hover:text-[#AC7F5E]">
                 Masuk
               </Link>
               <Link
                 href="/register"
-                className="rounded-full bg-[#BBAB8C] px-5 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-[#9c8f76]"
-              >
+                className="rounded-full bg-[#BBAB8C] px-5 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-[#9c8f76]">
                 Daftar
               </Link>
             </>
@@ -210,9 +208,12 @@ export default function Navbar() {
               scrolled
                 ? "bg-white ring-black/[0.05] text-[#091413]"
                 : "bg-white/50 ring-white/20 text-[#091413]"
-            }`}
-          >
-            {isMobileMenuOpen ? <X size={20} strokeWidth={2.5} /> : <Menu size={20} strokeWidth={2.5} />}
+            }`}>
+            {isMobileMenuOpen ? (
+              <X size={20} strokeWidth={2.5} />
+            ) : (
+              <Menu size={20} strokeWidth={2.5} />
+            )}
           </button>
         </div>
       </div>
@@ -225,8 +226,7 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2 }}
-            className="absolute left-0 top-full mt-2 w-full px-4 lg:hidden"
-          >
+            className="absolute left-0 top-full mt-2 w-full px-4 lg:hidden">
             <div className="flex flex-col overflow-hidden rounded-2xl bg-white/95 p-4 shadow-xl ring-1 ring-black/5 backdrop-blur-xl">
               <ul className="flex flex-col gap-1">
                 {navLinks.map((item) => (
@@ -239,8 +239,7 @@ export default function Navbar() {
                           activeSection === item.href
                             ? "bg-[#AC7F5E]/10 text-[#AC7F5E]"
                             : "text-[#091413]/70 hover:bg-black/5 hover:text-[#091413]"
-                        }`}
-                      >
+                        }`}>
                         {item.label}
                       </Link>
                     ) : (
@@ -251,8 +250,7 @@ export default function Navbar() {
                           activeSection === item.href
                             ? "bg-[#AC7F5E]/10 text-[#AC7F5E]"
                             : "text-[#091413]/70 hover:bg-black/5 hover:text-[#091413]"
-                        }`}
-                      >
+                        }`}>
                         {item.label}
                       </a>
                     )}
@@ -266,17 +264,17 @@ export default function Navbar() {
                 {token ? (
                   <>
                     <Link
-                      href={user?.role === "MERCHANT" ? "/seller" : "/buyer-profile"}
+                      href={
+                        user?.role === "MERCHANT" ? "/seller" : "/buyer-profile"
+                      }
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-[#091413]/70 transition-colors hover:bg-black/5 hover:text-[#091413]"
-                    >
+                      className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-[#091413]/70 transition-colors hover:bg-black/5 hover:text-[#091413]">
                       <CircleUserRound size={18} strokeWidth={2.5} />
                       Profil
                     </Link>
                     <button
                       onClick={handleLogout}
-                      className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-[#AC7F5E] transition-colors hover:bg-[#AC7F5E]/10"
-                    >
+                      className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-[#AC7F5E] transition-colors hover:bg-[#AC7F5E]/10">
                       <LogOut size={18} strokeWidth={2.5} />
                       Keluar
                     </button>
@@ -286,15 +284,13 @@ export default function Navbar() {
                     <Link
                       href="/login"
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="flex items-center justify-center rounded-xl bg-black/5 px-4 py-3 text-sm font-bold text-[#091413] transition hover:bg-black/10"
-                    >
+                      className="flex items-center justify-center rounded-xl bg-black/5 px-4 py-3 text-sm font-bold text-[#091413] transition hover:bg-black/10">
                       Masuk
                     </Link>
                     <Link
                       href="/register"
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="flex items-center justify-center rounded-xl bg-[#BBAB8C] px-4 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#9c8f76]"
-                    >
+                      className="flex items-center justify-center rounded-xl bg-[#BBAB8C] px-4 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#9c8f76]">
                       Daftar
                     </Link>
                   </div>
